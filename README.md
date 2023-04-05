@@ -1,18 +1,20 @@
 ## Group #5
 
-## Group Meeting: 2:30 PM Mon
-## TA Meeting: 3:00 PM Mon
+## Group Meeting: 
+* 2:30 PM Mon
+## TA Meeting: 
+* 3:00 PM Mon
 
 ## Team Name: Game Gurus
 ## Application Name: VGList
 
 ## Team Members: 
 ---------------
-Max White | Email: mawh8864@colorado.edu github: maxjwhite 
-Jared Dutton | Email: jadu6679@colorado.edu github: duttojar 
-Macy Crow | Email: macr9723@colorado.edu github: macr9723
-Alakh Naik | Email: alna3985@colorado.edu github: alnaik
-Anthony Weigand | Email: anwe1890@colorado.edu github: tweigand1994
+* Max White | Email: mawh8864@colorado.edu github: maxjwhite 
+* Jared Dutton | Email: jadu6679@colorado.edu github: duttojar 
+* Macy Crow | Email: macr9723@colorado.edu github: macr9723
+* Alakh Naik | Email: alna3985@colorado.edu github: alnaik
+* Anthony Weigand | Email: anwe1890@colorado.edu github: tweigand1994
 
 ## Application Description: 
 --------------------------
