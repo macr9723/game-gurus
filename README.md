@@ -18,4 +18,6 @@
 ## Vision Statement: 
 “To create a space where users can see what’s going on in the video game world.” 
 
+### Link to Deliverable
+- [Here](https://docs.google.com/document/d/1yH0WpI1xJerLbbXM1trn9cCRhVGhJZvdjHoIMOE_Lx8/edit?usp=sharing)
 
