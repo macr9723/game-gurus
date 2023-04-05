@@ -1,10 +1,4 @@
 ## Group #5
-
-## Group Meeting: 
-* 2:30 PM Mon
-## TA Meeting: 
-* 3:00 PM Mon
-
 ## Team Name: Game Gurus
 ## Application Name: VGList
 
