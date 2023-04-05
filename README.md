@@ -17,7 +17,6 @@
 * Anthony Weigand | Email: anwe1890@colorado.edu github: tweigand1994
 
 ## Application Description: 
---------------------------
 	VGlist is an videogame based forum that allows users to view and create ratings, reviews, and collections of video games. It allows for users to stay connected to what’s going on with all things video game related. It also provides a space for users to list their own accomplishments across various games (hours logged, rare items, rare achievements, etc). 
 	Users will be able to log into their own unique account, view a personal profile page which displays their contributions to the forum. A Search page will also be included which allows the user to browse video game catalogs with filter capabilities to sort results based on genres the user inputs. 
 	Additionally, a private admin page will allow specific users to edit and remove posts that are deemed to be inappropriate/offensive. 
