@@ -1,0 +1,15 @@
+- Login, register, database
+- We want login API at a minimum
+- Make sure to have release notes. Every time our project is in a stable state to release to the customer.
+    - Ex: “home page added” v2-v3 home page added
+- This week’s deliverable is just info on lab 10. New doc each day to show release notes?
+    - No, this week just based on lab10 doc. Every week we have milestone release.
+    - You can do automated release notes thru github, or manual release notes.
+        - Automated release notes: [https://cuboulder-csci3308.pages.dev/docs/project/guide](https://cuboulder-csci3308.pages.dev/docs/project/guide)
+
+TAKEAWAY
+
+- RELEASE NOTES
+- UPDATE PROJECT BOARD
+- EVERYBODY IS ASSIGNING TASKS (learn how to use the project board)
+- FIGURE OUT HOW TO USE API (dummy API)

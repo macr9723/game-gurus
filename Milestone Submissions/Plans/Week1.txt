@@ -1,0 +1,13 @@
+What have we done since last week?
+- Made wireframes so that we're on same page about layout
+- Made use-case diagram
+- Made a mock-up of sql tables
+- Made directory structure for project
+
+What do we plan to do next week?
+- Login, Registration
+- Home page
+- Search Function
+
+What challenges are we facing?
+- Which game database api do we want to use?
