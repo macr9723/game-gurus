@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS users(
     username VARCHAR(50) PRIMARY KEY,
-    password VARCHAR(50) NOT NULL,
-    email VARCHAR(200) NOT NULL,
-    age INTEGER NOT NULL,
-    user_platform VARCHAR(50) NOT NULL
+    password VARCHAR(50) NOT NULL
+    --email VARCHAR(200) NOT NULL,
+    --age INTEGER NOT NULL,
+    --user_platform VARCHAR(50) NOT NULL
 );
 
 -- decimal(p,s) p is the amount of #'s allowed before . s is amount allowed after
 CREATE TABLE IF NOT EXISTS games(
     name VARCHAR(100) PRIMARY KEY,
-    year INTEGER NOT NULL,
-    avg_rating DECIMAL(2,1) NOT NULL
+    --year INTEGER NOT NULL,
+    --avg_rating DECIMAL(2,1) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS game_libraries(
