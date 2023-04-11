@@ -7,9 +7,10 @@ What have we done since last week?
 What do we plan to do next week?
 - Login: Tony
 - Registration: Macy
-- Navbar(partial): Max 
-- Home page: Max
-- Search Function
+- Navbar(partial): Jared
+- Header/Footer: Jared 
+- Home page: Max, Alakh
+- Search Function: Max, Alakh
 
 What challenges are we facing?
 - Which game database api do we want to use?
