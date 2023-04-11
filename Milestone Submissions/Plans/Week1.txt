@@ -5,8 +5,10 @@ What have we done since last week?
 - Made directory structure for project
 
 What do we plan to do next week?
-- Login, Registration
-- Home page
+- Login: Tony
+- Registration: Macy
+- Navbar(partial): Max 
+- Home page: Max
 - Search Function
 
 What challenges are we facing?
