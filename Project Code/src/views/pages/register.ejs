@@ -1,0 +1,21 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <form action="/register" method="POST">
+      <label for="username">Username</label>
+      <input class="form-control" type="username" id="username" name="username" />
+    
+      <label for="password">Password</label>
+      <input class="form-control" type="text" id="password" name="password" />
+      
+      <div class="text-nonwrap">Already have an account? </div>
+      <a href="http://localhost:3000/login" class="stretched-link" style="position: relative;">Login</a>
+      <input class="btn btn-primary float-right" type="submit" value="Register" />
+    </form>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
