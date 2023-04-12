@@ -1,4 +1,5 @@
-<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/header') %> 
+<%- include ('../partials/menu') %>
 
 <main>
   <div class="container">
@@ -7,13 +8,13 @@
     <form action="/login" method="POST">
       <div>
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required />
+        <input class="form-control" type="text" id="username" name="username" required />
       </div>
       <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required />
+        <input class="form-control" type="password" id="password" name="password" required />
       </div>
-      <button type="submit" name="button">Login</button>
+      <input class="btn btn-primary float-right" type="submit" value="Login" />
     </form>
     <p>
       Don't have an account?
