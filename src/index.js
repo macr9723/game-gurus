@@ -129,6 +129,48 @@ app.get('/discover', (req,res)=>{
   });
 });
 
+// LOGIN API
+
+// Render Login
+app.get('/login', (req, res) => {
+	res.render("pages/login");
+});
+
+// Try/catch *** do we want to keep db of usernames?? ***
+
+app.post('/login', async (req, res) => {
+	const { username, password } = req.body;
+
+	try {
+		// Find user by username
+		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+
+		if (!user) {
+			// User not found, redirect to register page
+			res.redirect("pages/register");
+			return;
+		}
+
+		// Compare password from request with password in DB
+		const match = await bcrypt.compare(password, user.password);
+
+		if (!match) {
+			// Passwords don't match, throw error
+			throw new Error('Incorrect username or password.');
+		}
+
+		// Passwords match, save user in session
+		req.session.user = user;
+		req.session.save();
+
+		// Redirect to discover page
+    // NO DISCOVER PAGE, just API for now.
+		// res.redirect('/discover');
+	} catch (error) {
+		// Handle error and render login page with error message
+		res.render('pages/login', { errorMessage: error.message });
+	}
+});
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
