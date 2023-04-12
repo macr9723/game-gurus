@@ -67,8 +67,8 @@ app.use(
 // *****************************************************
 
 
-app.get('/', (req, res) => {
-    res.render('pages/register', {});
+app.get('/register', (req, res) => {
+    res.render('pages/register');
 });
   
 // Register
