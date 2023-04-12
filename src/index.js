@@ -97,37 +97,57 @@ app.post('/register', async (req, res) => {
     
 });
 
-app.get('/discover', (req,res)=>{
-
-  axios({
-  url: `https://www.giantbomb.com/api/games`,
-  method: 'GET',
-  dataType: 'json',
-  headers: {
-    'user-agent':'newcoder',
-  },
-  params: {
-    api_key: process.env.API_KEY,
-    limit: 10,
-    format: 'json',
-    field_list: `image,name`,
-    sort: 'original_release_date:desc'
-  },
-})
-  .then(results => {
-    console.log(results.data.results.image); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-    res.render('pages/discover', {
-      results,
-    });
-  })
-  .catch(error => {
-    console.log(error);
-    res.render("pages/discover", {
-      results: [],
-    });
-    // Handle errors
+app.get('/discover', (req, res) => {
+  const latestGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'user-agent': 'newcoder',
+    },
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_release_date',
+      sort: 'original_release_date:desc',
+    },
   });
+
+  const highestRatedGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'user-agent': 'newcoder',
+    },
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_game_rating',
+      sort: 'original_game_rating:desc',
+    },
+  });
+
+  Promise.all([latestGamesRequest, highestRatedGamesRequest])
+    .then(results => {
+      const latestGames = results[0].data.results;
+      const highestRatedGames = results[1].data.results;
+      res.render('pages/discover', {
+        latestGames,
+        highestRatedGames,
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('pages/discover', {
+        latestGames: [],
+        highestRatedGames: [],
+      });
+    });
 });
+
 
 
 app.get('/search', (req,res)=>{
