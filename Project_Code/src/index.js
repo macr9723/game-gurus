@@ -97,10 +97,63 @@ app.post('/register', async (req, res) => {
     
 });
 
-app.get('/discover', (req,res)=>{
+app.get('/discover', (req, res) => {
+  const latestGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'user-agent': 'newcoder',
+    },
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_release_date',
+      sort: 'original_release_date:desc',
+    },
+  });
+
+  const highestRatedGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'user-agent': 'newcoder',
+    },
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_game_rating',
+      sort: 'original_game_rating:desc',
+    },
+  });
+
+  Promise.all([latestGamesRequest, highestRatedGamesRequest])
+    .then(results => {
+      const latestGames = results[0].data.results;
+      const highestRatedGames = results[1].data.results;
+      res.render('pages/discover', {
+        latestGames,
+        highestRatedGames,
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('pages/discover', {
+        latestGames: [],
+        highestRatedGames: [],
+      });
+    });
+});
+
+
+
+app.get('/search', (req,res)=>{
 
   axios({
-  url: `https://www.giantbomb.com/api/games`,
+  url: `https://www.giantbomb.com/api/search`,
   method: 'GET',
   dataType: 'json',
   headers: {
@@ -110,12 +163,12 @@ app.get('/discover', (req,res)=>{
     api_key: process.env.API_KEY,
     limit: 10,
     format: 'json',
-    field_list: `image,name`,
-    sort: 'number_of_user_reviews:desc'
+    query: 'Call of Duty', // this will be replaced with req.body.search, allowing the user to pass in a game title to search for, replace this for now with whatever dummy game name for testing
+    resources:'game',
   },
 })
   .then(results => {
-    console.log(results.data.results.image); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+    console.log(results.data.results); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
     res.render('pages/discover', {
       results,
     });
@@ -128,6 +181,14 @@ app.get('/discover', (req,res)=>{
     // Handle errors
   });
 });
+
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render("pages/logout");
+});
+
+
 
 // LOGIN API
 
