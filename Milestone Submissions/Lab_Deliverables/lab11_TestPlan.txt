@@ -1,1 +1,8 @@
-1. filler text
+1. Analyze Product:
+2. Design Test Strategy:
+3. Define Test Objectives:
+4. Define Test Criteria:
+5. Resource Planning:
+6. Plan Test Environment:
+7. Schedule & Estimation:
+8. Determine Test Deliverables:
