@@ -66,6 +66,7 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
+<<<<<<< HEAD
 app.get('/', (req, res) => {
   res.render('pages/login');
 });
@@ -73,6 +74,11 @@ app.get('/', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('pages/register', {});
+=======
+
+app.get('/register', (req, res) => {
+    res.render('pages/register');
+>>>>>>> 45d7ac7c6f27d1eae9bf7dbf9d75bc9495ef2cdb
 });
   
 // Register
