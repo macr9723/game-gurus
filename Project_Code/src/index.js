@@ -66,16 +66,16 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
+//REGISTER API
+
 app.get('/', (req, res) => {
   res.render('pages/login');
 });
-
 
 app.get('/register', (req, res) => {
     res.render('pages/register', {});
 });
   
-// Register
 app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const username = req.body.username;
@@ -102,6 +102,49 @@ app.post('/register', async (req, res) => {
       });
 			return;
     }
+});
+
+// LOGIN API
+
+// Render Login
+app.get('/login', (req, res) => {
+	res.render("pages/login");
+});
+
+// Try/catch *** do we want to keep db of usernames?? ***
+
+app.post('/login', async (req, res) => {
+	const { username, password } = req.body;
+
+	try {
+		// Find user by username
+		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+
+		if (!user) {
+			// User not found, redirect to register page
+			res.redirect('/register');
+			return;
+		}
+
+		// Compare password from request with password in DB
+		const match = await bcrypt.compare(password, user.password);
+
+		if (!match) {
+			// Passwords don't match, throw error
+			throw new Error('Incorrect username or password.');
+		}
+
+		// Passwords match, save user in session
+		req.session.user = user;
+		req.session.save();
+
+		// Redirect to discover page
+    // NO DISCOVER PAGE, just API for now.
+		// res.redirect('/discover');
+	} catch (error) {
+		// Handle error and render login page with error message
+		res.render('pages/login', { errorMessage: error.message });
+	}
 });
 
 app.get('/discover', (req, res) => {
@@ -155,8 +198,6 @@ app.get('/discover', (req, res) => {
     });
 });
 
-
-
 app.get('/search', (req,res)=>{
 
   axios({
@@ -189,55 +230,12 @@ app.get('/search', (req,res)=>{
   });
 });
 
-
+//Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/logout");
-});
-
-
-
-// LOGIN API
-
-// Render Login
-app.get('/login', (req, res) => {
-	res.render("pages/login");
-});
-
-// Try/catch *** do we want to keep db of usernames?? ***
-
-app.post('/login', async (req, res) => {
-	const { username, password } = req.body;
-
-	try {
-		// Find user by username
-		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
-
-		if (!user) {
-			// User not found, redirect to register page
-			res.redirect('/register');
-			return;
-		}
-
-		// Compare password from request with password in DB
-		const match = await bcrypt.compare(password, user.password);
-
-		if (!match) {
-			// Passwords don't match, throw error
-			throw new Error('Incorrect username or password.');
-		}
-
-		// Passwords match, save user in session
-		req.session.user = user;
-		req.session.save();
-
-		// Redirect to discover page
-    // NO DISCOVER PAGE, just API for now.
-		// res.redirect('/discover');
-	} catch (error) {
-		// Handle error and render login page with error message
-		res.render('pages/login', { errorMessage: error.message });
-	}
+  res.render('pages/home', {
+    message: 'Logged out successfully'
+  })
 });
 
 // lab11 Adding sample route to index.js
