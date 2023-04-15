@@ -66,7 +66,6 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
-<<<<<<< HEAD
 app.get('/', (req, res) => {
   res.render('pages/login');
 });
@@ -74,11 +73,6 @@ app.get('/', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('pages/register', {});
-=======
-
-app.get('/register', (req, res) => {
-    res.render('pages/register');
->>>>>>> 45d7ac7c6f27d1eae9bf7dbf9d75bc9495ef2cdb
 });
   
 // Register
@@ -86,25 +80,28 @@ app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const username = req.body.username;
     const hash = await bcrypt.hash(req.body.password, 10);
-  
-    const query = "insert into users (username,password) values $1, $2";
-    const values = [username, hash];
-    db.one(query,values)
-    .then((data) => {
-      user.username = username;
-      user.password = hash;
-  
-      req.session.user = user;
-      req.session.save();
-  
-      res.redirect("/login");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.redirect("/register");
-    });
-    // To-DO: Insert username and hashed password into 'users' table
-    
+
+    //Catch if a user exists in the table already
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+
+		if (!user) {
+      const query = "insert into users (username, password) values ($1, $2) returning * ;";
+      const values = [username, hash];
+      db.one(query,values)
+      .then((data) => {
+        console.log(data);
+        res.redirect("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.redirect("/register");
+      });
+		} else {
+      res.render('pages/register', {
+        message: 'Username already exists'
+      });
+			return;
+    }
 });
 
 app.get('/discover', (req, res) => {
@@ -218,7 +215,7 @@ app.post('/login', async (req, res) => {
 
 		if (!user) {
 			// User not found, redirect to register page
-			res.redirect("pages/register");
+			res.redirect('/register');
 			return;
 		}
 
