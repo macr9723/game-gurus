@@ -27,13 +27,28 @@ describe('Server!', () => {
   // TO-DO: Part A Login unit test case
 
   it('positive : /login', done => {
-    chai
-      .request(server)
+    chai.request(server)
       .post('/login')
-      .send({username: 'alnaik', password: '123'})
-      .end((err, res) => {
+      .send({ username: 'alnaik', password: '123' })
+      .end(function(err, res) {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('Success');
+        expect(res.body.status).to.equals('success');
+        expect(res.body).to.have.property('user');
+        expect(res.body.user).to.have.property('password');
+        expect(res.body.user).to.have.property('username', 'alnaik');
+        done();
+      });
+  });
+
+  it('Negative: /login with invalid password', done => {
+    chai.request(server)
+      .post('/login')
+      .send({ username: 'existinguser', password: 'invalid-password' })
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        expect(res.body.status).to.equal('error');
+        expect(res.body.message).to.equal('Invalid username or password');
+        expect(res.body).to.not.have.property('user');
         done();
       });
   });

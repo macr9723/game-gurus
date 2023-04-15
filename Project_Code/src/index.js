@@ -62,6 +62,9 @@ app.use(
   })
 );
 
+var path = require('path');
+app.use(express.static(path.join(__dirname, 'resources')));
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
@@ -123,8 +126,8 @@ app.post('/login', async (req, res) => {
 
 		if (!user) {
 			// User not found, redirect to register page
+      return res.status(401).json({ status: 'error', message: 'Invalid username or password' });
 			res.redirect("pages/register");
-			return;
 		}
 
 		// Compare password from request with password in DB
@@ -138,7 +141,7 @@ app.post('/login', async (req, res) => {
 		// Passwords match, save user in session
 		req.session.user = user;
 		req.session.save();
-    //res.json({status: 'success', message: 'Success'});
+    res.status(200).json({ status: 'success', message: 'Success', user });
 
 		// Redirect to discover page
     // NO DISCOVER PAGE, just API for now.
