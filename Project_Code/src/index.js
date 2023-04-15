@@ -98,6 +98,7 @@ app.post('/register', async (req, res) => {
       });
 		} else {
       res.render('pages/register', {
+        error: true,
         message: 'Username already exists'
       });
 			return;
@@ -118,32 +119,42 @@ app.post('/login', async (req, res) => {
 
 	try {
 		// Find user by username
-		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+		const [userFound] = await db.any('SELECT * FROM users WHERE username = $1', username);
 
-		if (!user) {
+		if (!userFound) {
 			// User not found, redirect to register page
-			res.redirect('/register');
-			return;
+			res.render('pages/register', {
+        error: true,
+        message: 'User Not Found',
+      });
 		}
-
+    
+    user.username = userFound.username;
+    user.password = userFound.password;
 		// Compare password from request with password in DB
 		const match = await bcrypt.compare(password, user.password);
 
 		if (!match) {
 			// Passwords don't match, throw error
-			throw new Error('Incorrect username or password.');
+			res.render('pages/login', {
+        error: true,
+        message: 'Incorrect Username or Password',
+      });
 		}
 
 		// Passwords match, save user in session
 		req.session.user = user;
 		req.session.save();
+    res.render('pages/login', {
+      message: 'Login Successful'
+    })
 
 		// Redirect to discover page
     // NO DISCOVER PAGE, just API for now.
 		// res.redirect('/discover');
 	} catch (error) {
 		// Handle error and render login page with error message
-		res.render('pages/login', { errorMessage: error.message });
+		res.render('pages/login', { message: error.message });
 	}
 });
 
@@ -233,7 +244,7 @@ app.get('/search', (req,res)=>{
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render('pages/home', {
+  res.render('pages/login', {
     message: 'Logged out successfully'
   })
 });
