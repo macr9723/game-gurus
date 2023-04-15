@@ -1,0 +1,27 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<div class="container-fluid-1">
+  <h1 class="display-6">Latest Games</h1>
+  <div class="card-row">
+    <% latestGames.forEach(event => { %>
+      <div class="card">
+        <img src=<%=event.image.original_url %> alt=<%=event.name %>>
+      </div>
+      <!-- <p><%=event.name %></p> -->
+    <% }) %>
+  </div>
+</div>
+<div class="container-fluid-2">
+  <h1 class="display-6">Highest Rated Games</h1>
+  <div class="card-row">
+    <% highestRatedGames.forEach(event => { %>
+      <div class="card">
+        <img src=<%=event.image.original_url %> alt=<%=event.name %>>
+      </div>
+      <!-- <p><%=event.name %></p> -->
+    <% }) %>
+  </div>
+</div>
+
+<%- include ('../partials/footer') %> 

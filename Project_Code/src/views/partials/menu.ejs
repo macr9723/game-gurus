@@ -1,12 +1,12 @@
 <header>
 <nav class="navbar navbar-expand bg-light" aria-label="Second navbar example">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">VGList</a>
+      <a class="navbar-brand" href="/discover">VGList</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <form role="search">
-        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+      <form action="/search" method="GET" role="search">
+        <input class="form-control" type="search" placeholder="Search" name="search" id="search" aria-label="Search">
       </form>
       <div class="collapse navbar-collapse" id="navbarsExample02">
         <ul class="navbar-nav me-auto">
