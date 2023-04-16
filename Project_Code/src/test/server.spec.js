@@ -24,32 +24,56 @@ describe('Server!', () => {
   });
 
   // ===========================================================================
-  // TO-DO: Part A Login unit test case
+  // TO-DO: Part A Login unit test case/ Part B Register unit test case
 
-  it('positive : /login', done => {
+  it('positive: /login', done => {
     chai.request(server)
       .post('/login')
       .send({ username: 'alnaik', password: '123' })
-      .end(function(err, res) {
+      .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.equals('success');
-        expect(res.body).to.have.property('user');
-        expect(res.body.user).to.have.property('password');
-        expect(res.body.user).to.have.property('username', 'alnaik');
+        expect(res.body.status).to.equal('Success');
+        expect(res.body.message).to.equal('Login Successful');
         done();
       });
   });
+  
 
   it('Negative: /login with invalid password', done => {
     chai.request(server)
       .post('/login')
-      .send({ username: 'existinguser', password: 'invalid-password' })
+      .send({ username: 'alnaik', password: 'lalalala' })
       .end((err, res) => {
-        expect(res).to.have.status(401);
+        expect(res).to.have.status(200);
         expect(res.body.status).to.equal('error');
-        expect(res.body.message).to.equal('Invalid username or password');
+        expect(res.body.message).to.equal('Incorrect Username or Password');
         expect(res.body).to.not.have.property('user');
         done();
       });
   });
+
+  it('positive: /register', done => {
+    chai.request(server)
+      .post('/register')
+      .send({ username: 'test1', password: 'pass1' })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.equal('Success');
+        expect(res.body.message).to.equal('Registration Successful');
+        done();
+      });
+  });
+
+  it('negative: /register (duplicate user)', done => {
+    chai.request(server)
+      .post('/register')
+      .send({ username: 'test1', password: 'pass1' }) // The same user as in the positive test case
+      .end((err, res) => {
+        expect(res).to.have.status(409); // Conflict status code
+        expect(res.body.status).to.equal('Error');
+        expect(res.body.message).to.equal('Username already exists');
+        done();
+      });
+  });
+  
 });

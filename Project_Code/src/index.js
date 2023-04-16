@@ -62,6 +62,7 @@ app.use(
   })
 );
 
+// Serve static files from the resources folder
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'resources')));
 
@@ -88,24 +89,43 @@ app.post('/register', async (req, res) => {
   const username = req.body.username;
   const hash = await bcrypt.hash(req.body.password, 10);
 
-  const query = "insert into users (username,password) values ($1, $2) returning *;";
-  const values = [username, hash];
-  db.one(query,values)
-  .then((data) => {
-    user.username = username;
-    user.password = hash;
+  //Catch if a user exists in the table already
+  const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
 
-    req.session.user = user;
-    req.session.save();
-
-    res.redirect("/login");
-  })
-  .catch((err) => {
-    console.log(err);
-    res.redirect("/register");
-  });
-  // To-DO: Insert username and hashed password into 'users' table
-
+  if (!user) {
+    const query = "insert into users (username, password) values ($1, $2) returning * ;";
+    const values = [username, hash];
+    db.one(query,values)
+    .then((data) => {
+      console.log(data);
+      //Successfull registration test case
+      //res.status(200).json({
+        //status: 'Success',
+        //message: 'Registration Successful'
+      //});
+      res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+      //Unsuccessful registration test case default
+      //res.status(500).json({
+        //status: 'Error',
+        //message: 'Registration Failed'
+      //});
+      res.redirect("/register");
+    });
+  } else {
+    //Unsuccessful registration test case
+    //res.status(409).json({
+      //status: 'Error',
+      //message: 'Username already exists'
+    //});
+    res.render('pages/register', {
+      error: true,
+      message: 'Username already exists'
+    });
+    return;
+  }
 });
 
 // LOGIN API
@@ -116,41 +136,57 @@ app.get('/login', (req, res) => {
 });
 
 // Try/catch *** do we want to keep db of usernames?? ***
-
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
 
 	try {
 		// Find user by username
-		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+		const [userFound] = await db.any('SELECT * FROM users WHERE username = $1', username);
 
-		if (!user) {
+		if (!userFound) {
 			// User not found, redirect to register page
-      return res.status(401).json({ status: 'error', message: 'Invalid username or password' });
-			res.redirect("pages/register");
+			res.render('pages/register', {
+        error: true,
+        message: 'User Not Found',
+      });
 		}
-
+    
+    user.username = userFound.username;
+    user.password = userFound.password;
 		// Compare password from request with password in DB
 		const match = await bcrypt.compare(password, user.password);
 
 		if (!match) {
 			// Passwords don't match, throw error
-			throw new Error('Incorrect username or password.');
+      // negative test case
+      // Send JSON error response with 200 status code
+      //res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
+			res.render('pages/login', {
+        error: true,
+        message: 'Incorrect Username or Password',
+     });
 		}
 
 		// Passwords match, save user in session
 		req.session.user = user;
 		req.session.save();
-    res.status(200).json({ status: 'success', message: 'Success', user });
+    //testcase message
+    //res.status(200).json({ status: 'Success', message: 'Login Successful', user });
+    // Redirect to /discover
+    res.redirect('/discover');
+    
+    //The reason we can't use the code below is that we are using a redirect to discover instead.
+    //res.render('pages/discover', {
+      //status: 'success',
+      //message: 'Login Successful'
+    //})
 
-		// Redirect to discover page
-    // NO DISCOVER PAGE, just API for now.
-		res.redirect('/discover');
 	} catch (error) {
 		// Handle error and render login page with error message
-		res.render('pages/login', { errorMessage: error.message });
+		res.render('pages/login', { message: error.message });
 	}
 });
+
 
 // Authentication Middleware.
 const auth = (req, res, next) => {

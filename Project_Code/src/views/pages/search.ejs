@@ -2,13 +2,13 @@
 <%- include ('../partials/menu') %>
 
 <div class="container-fluid-1">
-    <h1 class="display-6">Latest Games</h1>
+    <h1 class="link2">Search Results</h1>
     <div class="card-row">
       <% results.data.results.forEach(event => { %>
         <div class="card">
+          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
           <img src=<%=event.image.original_url %> alt=<%=event.name %>>
         </div>
-        <!-- <p><%=event.name %></p> -->
       <% }) %>
     </div>
   </div>
