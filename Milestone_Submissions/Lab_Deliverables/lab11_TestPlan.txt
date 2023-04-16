@@ -1,0 +1,60 @@
+UAT Plans
+
+Feature 1: Search
+
+Test Cases
+- Should pull up specific games related to user input
+- Partial or incomplete searches should pull up best matching results
+- If user puts in a search that pulls up nothing it should let them know that nothing was found
+
+Data
+- Different 'test data'/searches will be used on the search form in the navbar
+- ex: "Call", "", "MMMMMMMMMMMMM"
+
+Environment
+- Test users, logged into an account given to them, will be given given a set of test searches
+and then the option of doing their own searches to determine how the Search function works
+
+Results
+- A 'browse' page with a collection (or nothing) of games that properly reflect what 
+test data was used on the Search function 
+- Example: "Call" should return a collection of Call of Duty games or other games with 'Call' in the title
+- "" should return a search for 'nothing' that will pull up a collection of games similar to the original home page
+- "MMMMMMMMM" should return nothing and inform the user that this search returned nothing with a message
+
+Users
+- Users will include us and a set of users we anticpate will reflect the target demographic (gamers)
+
+Feature 2: Add Game to library
+User should add a game with folliwng input information
+- rating
+- comments
+- hours played
+
+Test Cases
+- When user clicks on 'add game' button it should update their game library
+- If a user clicks on 'add game' on a game that is already in their library it should either
+tell them that this game is already in their library or be disabled after a user adds it
+- If a user clicks on their library tab, the page should update accordingly to whatever
+game they added to their library
+- If a user inputs invalid information (ex: rating) it should inform them and let them 
+re-enter information
+
+Data
+- Various games would be used to test whether the proper game information is being sent 
+- ex: 'year', 'name', 'image', 'platform'
+- Valid data for rating and other data (ex: 4) would be used to determine if pages update accordingly
+- Invalid data for rating or other data points (ex: 'steven') would be used for testing to determine if 
+application crashes or if proper messages are being sent until user inputs valid data
+
+Environment
+- We would write a test api with test input user information to test a valid and invalid test case 
+- We would also do manual testing with users with a logged in account to store their library
+where users would add games of their choice and input information they think would make sense
+
+Results
+- How the library table is being updated in the database
+- Added games properly being displayed to the user in their library page
+- Proper messages being sent to user if they input invalid information for certain forms
+
+Feature 3:

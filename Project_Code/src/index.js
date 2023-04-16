@@ -70,6 +70,10 @@ app.use(express.static(path.join(__dirname, 'resources')));
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
+
+
+//REGISTER API
+
 app.get('/', (req, res) => {
   res.render('pages/login');
 });
@@ -81,10 +85,11 @@ app.get('/register', (req, res) => {
 // Welcome test case
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
+
 });
   
-// Register
 app.post('/register', async (req, res) => {
+
   //hash the password using bcrypt library
   const username = req.body.username;
   const hash = await bcrypt.hash(req.body.password, 10);
@@ -126,6 +131,33 @@ app.post('/register', async (req, res) => {
     });
     return;
   }
+    //hash the password using bcrypt library
+    const username = req.body.username;
+    const hash = await bcrypt.hash(req.body.password, 10);
+
+    //Catch if a user exists in the table already
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+
+		if (!user) {
+      const query = "insert into users (username, password) values ($1, $2) returning * ;";
+      const values = [username, hash];
+      db.one(query,values)
+      .then((data) => {
+        console.log(data);
+        res.redirect("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.redirect("/register");
+      });
+		} else {
+      res.render('pages/register', {
+        error: true,
+        message: 'Username already exists'
+      });
+			return;
+    }
+
 });
 
 // LOGIN API
@@ -136,6 +168,8 @@ app.get('/login', (req, res) => {
 });
 
 // Try/catch *** do we want to keep db of usernames?? ***
+
+
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
 
@@ -158,6 +192,7 @@ app.post('/login', async (req, res) => {
 
 		if (!match) {
 			// Passwords don't match, throw error
+
       // negative test case
       // Send JSON error response with 200 status code
       //res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
@@ -165,11 +200,13 @@ app.post('/login', async (req, res) => {
         error: true,
         message: 'Incorrect Username or Password',
      });
+
 		}
 
 		// Passwords match, save user in session
 		req.session.user = user;
 		req.session.save();
+
     //testcase message
     //res.status(200).json({ status: 'Success', message: 'Login Successful', user });
     // Redirect to /discover
@@ -180,6 +217,7 @@ app.post('/login', async (req, res) => {
       //status: 'success',
       //message: 'Login Successful'
     //})
+
 
 	} catch (error) {
 		// Handle error and render login page with error message
@@ -251,8 +289,6 @@ app.get('/discover', (req, res) => {
     });
 });
 
-
-
 app.get('/search', (req,res)=>{
 
   const search = req.query.search;
@@ -286,11 +322,13 @@ app.get('/search', (req,res)=>{
   });
   });
 
-
+//Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
+
   res.render("pages/logout");
 });
+
 
 
 
