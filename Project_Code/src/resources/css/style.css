@@ -74,6 +74,16 @@ of just specific pages.*/
       }
 
 /*CSS for the fonts in the header including logo and image labels(Potentially can be used anywhere on the website*/
+      .link-default{
+      -webkit-text-size-adjust: none;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      font: inherit;
+      font-family: Akkurat;
+      font-size: .78125vw;
+      text-transform: uppercase;
+      color: #fff;
+      }
       .link{
       -webkit-text-size-adjust: none;
       -webkit-font-smoothing: antialiased;
@@ -114,7 +124,7 @@ of just specific pages.*/
       height: max-content;
       width: fit-content;
       position: relative;
-      right : 25px;
+      right : 30px;
       }
 
     .link2{
