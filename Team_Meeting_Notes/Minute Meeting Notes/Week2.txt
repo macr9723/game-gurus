@@ -12,6 +12,7 @@ Alakh: So I can walk us through the flow for now, and show how the API's are int
 		Also, the game page is going to be for each game, individually. For example, if I click on SW: Eclipes it takes me to the game page,
 		which will show reviews, scores, etc.
 		For the game archive, which is going to be the library, we will also have a category/genre list, but that will be more of a front-end thing.
+		
 TAKEAWAYS
 
     Update tables
