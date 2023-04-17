@@ -1,0 +1,15 @@
+What have we done since last week?
+- Login FE & BE
+- Registration FE & BE
+- Error and Success Messages
+- UAT plans
+- test apis
+- Discover FE & BE
+
+What do we plan to do next week?
+- Display Game Information Page
+- Create Game DB
+- Save a Game to User's Library
+
+What challenges are we facing?
+- Genre difficulties with giantbomb api
