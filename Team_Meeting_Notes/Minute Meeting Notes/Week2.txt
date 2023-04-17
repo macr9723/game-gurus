@@ -11,25 +11,7 @@ Nikita: Lets do the Demo then.
 Alakh: So I can walk us through the flow for now, and show how the API's are interacting with the pages, etc.
 		Also, the game page is going to be for each game, individually. For example, if I click on SW: Eclipes it takes me to the game page,
 		which will show reviews, scores, etc.
-		For the game archive, which is going to be the library, we will also have a category/genre list, but that will be more of a front-end thing.
-		
-TAKEAWAYS
-
-    Update tables
-    - Add 'games' and 'users to games' tables
-        - 'users to games' is necessary for displaying game library on  user page
-
-    Re sort discover page
-    - Include rows for genres, etc.
-
-    Profile page
-    - Add page to display user info and user library
-
-    Game page
-    - Add page which holds game info, space to add review
-
-
-		
+		For the game archive, which is going to be the library, we will also have a category/genre list, but that will be more of a front-end thing.		
 
 Nikita: Everything looks good so far with the project, you have so much done already.
 		Let's discuss flow, how this whole thing is going to flow. So the user is going to take a game which can be added to user's profile. 
@@ -49,5 +31,21 @@ Nikita: Yes, please.
 		Okay, those look great. Thank you everyone.
 
 
+
+TAKEAWAYS
+
+    Update tables
+    - Add 'games' and 'users to games' tables
+        - 'users to games' is necessary for displaying game library on  user page
+
+    Re sort discover page
+    - Include rows for genres, etc.
+
+    Profile page
+    - Add page to display user info and user library
+
+    Game page
+    - Add page which holds game info, space to add review
+	
 *** Goals for this week ***
  1) Game Page, 2) Game Archive, 3) Dashboard (Profile page)
