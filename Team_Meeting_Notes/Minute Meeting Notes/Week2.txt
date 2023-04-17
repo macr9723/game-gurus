@@ -1,0 +1,15 @@
+
+    Update tables
+    - Add 'games' and 'users to games' tables
+        - 'users to games' is necessary for displaying game library on  user page
+
+    Re sort discover page
+    - Include rows for genres, etc.
+
+    Profile page
+    - Add page to display user info and user library
+
+    Game page
+    - Add page which holds game info, space to add review
+
+
