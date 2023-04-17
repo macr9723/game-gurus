@@ -55,7 +55,7 @@ describe('Server!', () => {
   it('positive: /register', done => {
     chai.request(server)
       .post('/register')
-      .send({ username: 'test1', password: 'pass1' })
+      .send({ username: 'test4', password: 'pass4' })
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.status).to.equal('Success');

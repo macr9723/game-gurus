@@ -131,32 +131,6 @@ app.post('/register', async (req, res) => {
     });
     return;
   }
-    //hash the password using bcrypt library
-    const username = req.body.username;
-    const hash = await bcrypt.hash(req.body.password, 10);
-
-    //Catch if a user exists in the table already
-    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
-
-		if (!user) {
-      const query = "insert into users (username, password) values ($1, $2) returning * ;";
-      const values = [username, hash];
-      db.one(query,values)
-      .then((data) => {
-        console.log(data);
-        res.redirect("/login");
-      })
-      .catch((err) => {
-        console.log(err);
-        res.redirect("/register");
-      });
-		} else {
-      res.render('pages/register', {
-        error: true,
-        message: 'Username already exists'
-      });
-			return;
-    }
 
 });
 
