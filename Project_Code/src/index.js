@@ -300,7 +300,7 @@ app.get('/search', (req,res)=>{
 app.get('/logout', (req, res) => {
   req.session.destroy();
 
-  res.render("pages/logout");
+  res.render("pages/login");
 });
 
 
