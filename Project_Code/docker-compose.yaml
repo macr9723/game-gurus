@@ -22,5 +22,6 @@ services:
     volumes:
       - ./src:/home/node/app
     command: 'npm start'
+    #'npm run testandrun' - for testing but first uncomment the test json in index.js
 volumes:
   group-project:

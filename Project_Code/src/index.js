@@ -62,40 +62,155 @@ app.use(
   })
 );
 
+// Serve static files from the resources folder
+var path = require('path');
+app.use(express.static(path.join(__dirname, 'resources')));
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
+
+
+
+//REGISTER API
 
 app.get('/', (req, res) => {
   res.render('pages/login');
 });
 
-
 app.get('/register', (req, res) => {
     res.render('pages/register', {});
 });
+
+// Welcome test case
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+
+});
   
-// Register
 app.post('/register', async (req, res) => {
-    //hash the password using bcrypt library
-    const username = req.body.username;
-    const hash = await bcrypt.hash(req.body.password, 10);
-  
-    const query = "insert into users (username,password) values $1, $2";
+
+  //hash the password using bcrypt library
+  const username = req.body.username;
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  //Catch if a user exists in the table already
+  const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+
+  if (!user) {
+    const query = "insert into users (username, password) values ($1, $2) returning * ;";
     const values = [username, hash];
     db.one(query,values)
     .then((data) => {
       console.log(data);
-  
+      //Successfull registration test case
+      //res.status(200).json({
+        //status: 'Success',
+        //message: 'Registration Successful'
+      //});
       res.redirect("/login");
     })
     .catch((err) => {
       console.log(err);
+      //Unsuccessful registration test case default
+      //res.status(500).json({
+        //status: 'Error',
+        //message: 'Registration Failed'
+      //});
       res.redirect("/register");
     });
-    // To-DO: Insert username and hashed password into 'users' table
-    
+  } else {
+    //Unsuccessful registration test case
+    //res.status(409).json({
+      //status: 'Error',
+      //message: 'Username already exists'
+    //});
+    res.render('pages/register', {
+      error: true,
+      message: 'Username already exists'
+    });
+    return;
+  }
+
 });
+
+// LOGIN API
+
+// Render Login
+app.get('/login', (req, res) => {
+	res.render("pages/login");
+});
+
+// Try/catch *** do we want to keep db of usernames?? ***
+
+
+app.post('/login', async (req, res) => {
+	const { username, password } = req.body;
+
+	try {
+		// Find user by username
+		const [userFound] = await db.any('SELECT * FROM users WHERE username = $1', username);
+
+		if (!userFound) {
+			// User not found, redirect to register page
+			res.render('pages/register', {
+        error: true,
+        message: 'User Not Found',
+      });
+		}
+    
+    user.username = userFound.username;
+    user.password = userFound.password;
+		// Compare password from request with password in DB
+		const match = await bcrypt.compare(password, user.password);
+
+		if (!match) {
+			// Passwords don't match, throw error
+
+      // negative test case
+      // Send JSON error response with 200 status code
+      //res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
+			res.render('pages/login', {
+        error: true,
+        message: 'Incorrect Username or Password',
+     });
+
+		}
+
+		// Passwords match, save user in session
+		req.session.user = user;
+		req.session.save();
+
+    //testcase message
+    //res.status(200).json({ status: 'Success', message: 'Login Successful', user });
+    // Redirect to /discover
+    res.redirect('/discover');
+    
+    //The reason we can't use the code below is that we are using a redirect to discover instead.
+    //res.render('pages/discover', {
+      //status: 'success',
+      //message: 'Login Successful'
+    //})
+
+
+	} catch (error) {
+		// Handle error and render login page with error message
+		res.render('pages/login', { message: error.message });
+	}
+});
+
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
 
 app.get('/discover', (req, res) => {
   const latestGamesRequest = axios({
@@ -148,12 +263,11 @@ app.get('/discover', (req, res) => {
     });
 });
 
-
-
 app.get('/search', (req,res)=>{
 
+  const search = req.query.search;
   axios({
-  url: `https://www.giantbomb.com/api/search`,
+  url: "https://www.giantbomb.com/api/search",
   method: 'GET',
   dataType: 'json',
   headers: {
@@ -163,81 +277,34 @@ app.get('/search', (req,res)=>{
     api_key: process.env.API_KEY,
     limit: 10,
     format: 'json',
-    query: 'Call of Duty', // this will be replaced with req.body.search, allowing the user to pass in a game title to search for, replace this for now with whatever dummy game name for testing
+    query: search, // this will be replaced with req.body.search, allowing the user to pass in a game title to search for, replace this for now with whatever dummy game name for testing
     resources:'game',
   },
-})
+  })
   .then(results => {
     console.log(results.data.results); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-    res.render('pages/discover', {
+    res.render('pages/search', {
       results,
     });
   })
   .catch(error => {
     console.log(error);
-    res.render("pages/discover", {
+    res.render("pages/search", {
       results: [],
     });
     // Handle errors
   });
-});
+  });
 
-
+//Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/logout");
+
+  res.render("pages/login");
 });
 
 
 
-// LOGIN API
-
-// Render Login
-app.get('/login', (req, res) => {
-	res.render("pages/login");
-});
-
-// Try/catch *** do we want to keep db of usernames?? ***
-
-app.post('/login', async (req, res) => {
-	const { username, password } = req.body;
-
-	try {
-		// Find user by username
-		const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
-
-		if (!user) {
-			// User not found, redirect to register page
-			res.redirect("pages/register");
-			return;
-		}
-
-		// Compare password from request with password in DB
-		const match = await bcrypt.compare(password, user.password);
-
-		if (!match) {
-			// Passwords don't match, throw error
-			throw new Error('Incorrect username or password.');
-		}
-
-		// Passwords match, save user in session
-		req.session.user = user;
-		req.session.save();
-
-		// Redirect to discover page
-    // NO DISCOVER PAGE, just API for now.
-		// res.redirect('/discover');
-	} catch (error) {
-		// Handle error and render login page with error message
-		res.render('pages/login', { errorMessage: error.message });
-	}
-});
-
-// lab11 Adding sample route to index.js
-
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
-});
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->

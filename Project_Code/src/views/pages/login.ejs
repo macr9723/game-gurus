@@ -2,25 +2,29 @@
 <%- include ('../partials/menu') %>
 
 <main>
-  <div class="container">
-    <h1>Login</h1>
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="bg-black p-5 rounded shadow-sm" style="width: 400px;">
+    <h1 class="link2" style="font-size: 2rem;">Login</h1>
 
     <form action="/login" method="POST">
       <div>
-        <label for="username">Username:</label>
+        <label for="username" class="link2">Username</label>
         <input class="form-control" type="text" id="username" name="username" required />
       </div>
       <div>
-        <label for="password">Password:</label>
+        <label for="password" class="link2">Password</label>
         <input class="form-control" type="password" id="password" name="password" required />
       </div>
-      <input class="btn btn-primary float-right" type="submit" value="Login" />
+      <div class= "row">
+        <div class = "col"><p class="link2">Don't have an account? &nbsp<a href="/register">Register</a></p></div>
+      </div>
+      <div class = "row">
+        <div class = "col-1"><button type="submit" class="btn btn-primary">Login</button></div>
+      </div>
     </form>
-    <p>
-      Don't have an account?
-      <a href="/register" class="link-primary">Register here.</a>
-    </p>
+    <div class="col"><%- include ('../partials/message') %></div>
   </div>
 </main>
 
 <%- include ('../partials/footer') %>
+
