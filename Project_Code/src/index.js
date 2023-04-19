@@ -299,18 +299,13 @@ app.get("/gamepage/:id",(req,res)=>{
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-      // params: {
-      //   search: game_name,
-      //   limit: 1,
-      //   fields: "*",
-      // },
       data: `fields *; where id = ${game_id};`
       
   
   })
     .then(response => {
         console.log(response.data);
-        res.render('pages/game',{
+        res.render('pages/gamepage',{
           data: response.data,
         })
     })
