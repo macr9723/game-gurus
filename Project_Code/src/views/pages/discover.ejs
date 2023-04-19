@@ -2,48 +2,42 @@
 <%- include ('../partials/menu') %>
 
 <div class="container-fluid-1">
-  <h1 class="link2">Latest Games</h1>
+  <h1 class="link2">Highest Rated Games</h1>
   <div class="card-row">
-    <% latestGames.forEach(event => { %>
+    <% highest_rated_games.forEach(event => { %>
       <div class="card">
         <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-        <img src=<%=event.image.original_url %> alt=<%=event.name %>>
+        <% if (event.cover) { %>
+          <% 
+          let coverURL = event.cover.url;
+          let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
+          %>
+          <img src="<%=coverURLBig %>" alt="<%=event.name %>">
+        <% } else { %>
+          <p>Image Not Found</p>
+        <% } %>
       </div>
     <% }) %>
   </div>
 </div>
 <div class="container-fluid-2">
-  <h1 class="link2">Highest Rated Games</h1>
+  <h1 class="link2">Latest Games</h1>
   <div class="card-row">
-    <% highestRatedGames.forEach(event => { %>
+    <% newest_games.forEach(event => { %>
       <div class="card">
         <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-        <img src=<%=event.image.original_url %> alt=<%=event.name %>>
+        <% if (event.cover) { %>
+          <% 
+          let coverURL = event.cover.url;
+          let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
+          %>
+          <img src="<%=coverURLBig %>" alt="<%=event.name %>">
+        <% } else { %>
+          <p>Image Not Found</p>
+        <% } %>
       </div>
     <% }) %>
   </div>
-</div>
-<div class="container-fluid-1">
-    <h1 class="link2">Latest Games</h1>
-    <div class="card-row">
-      <% latestGames.forEach(event => { %>
-        <div class="card">
-          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-          <img src=<%=event.image.original_url %> alt=<%=event.name %>>
-        </div>
-      <% }) %>
-    </div>
-  </div>
-  <div class="container-fluid-2">
-    <h1 class="link2">Highest Rated Games</h1>
-    <div class="card-row">
-      <% highestRatedGames.forEach(event => { %>
-        <div class="card">
-          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-          <img src=<%=event.image.original_url %> alt=<%=event.name %>>
-        </div>
-      <% }) %>
-    </div>
-  </div>
+</div> 
 
 <%- include ('../partials/footer') %> 
