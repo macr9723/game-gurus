@@ -287,9 +287,9 @@ app.get("/search",(req,res)=>{
 
 });
 
-app.get("/gamepage",(req,res)=>{
+app.get("/gamepage/:id",(req,res)=>{
 
-  const game_name = req.body.name;
+  const game_id = req.params.id;
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -299,11 +299,12 @@ app.get("/gamepage",(req,res)=>{
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-      params: {
-        search: game_name,
-        limit: 1,
-        fields: "*",
-      },
+      // params: {
+      //   search: game_name,
+      //   limit: 1,
+      //   fields: "*",
+      // },
+      data: `fields *; where id = ${game_id};`
       
   
   })
