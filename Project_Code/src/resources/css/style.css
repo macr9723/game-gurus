@@ -18,6 +18,10 @@ font.eot in /resources/css/fonts. */
         flex-wrap: nowrap;
         overflow-x: scroll;
       }
+      .card-row::-webkit-scrollbar {
+        display: none;
+      }
+      
   
       .card {
         flex: 0 0 auto;
