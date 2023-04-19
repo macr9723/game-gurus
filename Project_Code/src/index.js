@@ -310,7 +310,7 @@ app.get("/gamepage/:id",(req,res)=>{
   })
     .then(response => {
         console.log(response.data);
-        res.render('pages/game',{
+        res.render('pages/gamepage',{
           data: response.data,
         })
     })
