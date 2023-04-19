@@ -21,7 +21,6 @@ services:
       - '3000:3000'
     volumes:
       - ./src:/home/node/app
-    command: 'npm start'
-    #'npm run testandrun' - for testing but first uncomment the test json in index.js
+    command: 'npm run testandrun'
 volumes:
   group-project:

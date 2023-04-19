@@ -104,31 +104,31 @@ app.post('/register', async (req, res) => {
     .then((data) => {
       console.log(data);
       //Successfull registration test case
-      //res.status(200).json({
-        //status: 'Success',
-        //message: 'Registration Successful'
-      //});
-      res.redirect("/login");
+      res.status(200).json({
+        status: 'Success',
+        message: 'Registration Successful'
+      });
+      //res.redirect("/login");
     })
     .catch((err) => {
       console.log(err);
       //Unsuccessful registration test case default
-      //res.status(500).json({
-        //status: 'Error',
-        //message: 'Registration Failed'
-      //});
-      res.redirect("/register");
+      res.status(500).json({
+        status: 'Error',
+        message: 'Registration Failed'
+      });
+      //res.redirect("/register");
     });
   } else {
     //Unsuccessful registration test case
-    //res.status(409).json({
-      //status: 'Error',
-      //message: 'Username already exists'
-    //});
-    res.render('pages/register', {
-      error: true,
+    res.status(409).json({
+      status: 'Error',
       message: 'Username already exists'
     });
+    //res.render('pages/register', {
+      //error: true,
+      //message: 'Username already exists'
+    //});
     return;
   }
 
@@ -169,11 +169,11 @@ app.post('/login', async (req, res) => {
 
       // negative test case
       // Send JSON error response with 200 status code
-      //res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
-			res.render('pages/login', {
-        error: true,
-        message: 'Incorrect Username or Password',
-     });
+      res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
+			//res.render('pages/login', {
+        //error: true,
+        //message: 'Incorrect Username or Password',
+     //});
 
 		}
 
@@ -182,9 +182,9 @@ app.post('/login', async (req, res) => {
 		req.session.save();
 
     //testcase message
-    //res.status(200).json({ status: 'Success', message: 'Login Successful', user });
+    res.status(200).json({ status: 'Success', message: 'Login Successful', user });
     // Redirect to /discover
-    res.redirect('/discover');
+    //res.redirect('/discover');
     
     //The reason we can't use the code below is that we are using a redirect to discover instead.
     //res.render('pages/discover', {
@@ -213,88 +213,78 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/discover', (req, res) => {
-  const latestGamesRequest = axios({
-    url: 'https://www.giantbomb.com/api/games',
-    method: 'GET',
-    dataType: 'json',
+  const highest_rated_games =  axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
     headers: {
-      'user-agent': 'newcoder',
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
     },
-    params: {
-      api_key: process.env.API_KEY,
-      limit: 25,
-      format: 'json',
-      field_list: 'image,name,original_release_date',
-      sort: 'original_release_date:desc',
-    },
+    data: "fields name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
+
   });
 
-  const highestRatedGamesRequest = axios({
-    url: 'https://www.giantbomb.com/api/games',
-    method: 'GET',
-    dataType: 'json',
+
+  const newest_games = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
     headers: {
-      'user-agent': 'newcoder',
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
     },
-    params: {
-      api_key: process.env.API_KEY,
-      limit: 25,
-      format: 'json',
-      field_list: 'image,name,original_game_rating',
-      sort: 'original_game_rating:desc',
-    },
+    data: 'fields name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 10;'
+
   });
 
-  Promise.all([latestGamesRequest, highestRatedGamesRequest])
+  Promise.all([highest_rated_games, newest_games])
     .then(results => {
-      const latestGames = results[0].data.results;
-      const highestRatedGames = results[1].data.results;
+      const highest_rated_games = results[0].data;
+      const newest_games = results[1].data;
       res.render('pages/discover', {
-        latestGames,
-        highestRatedGames,
+        highest_rated_games,
+        newest_games,
       });
     })
     .catch(error => {
       console.log(error);
       res.render('pages/discover', {
-        latestGames: [],
-        highestRatedGames: [],
+        highest_rated_games: [],
+        newest_games: [],
       });
     });
 });
 
-app.get('/search', (req,res)=>{
-
+app.get("/search",(req,res)=>{
   const search = req.query.search;
+
   axios({
-  url: "https://www.giantbomb.com/api/search",
-  method: 'GET',
-  dataType: 'json',
+  url: "https://api.igdb.com/v4/games",
+  method: 'POST',
   headers: {
-    'user-agent':'newcoder',
+      'Accept': 'application/json',
+      'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+      'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
   },
-  params: {
-    api_key: process.env.API_KEY,
-    limit: 10,
-    format: 'json',
-    query: search, // this will be replaced with req.body.search, allowing the user to pass in a game title to search for, replace this for now with whatever dummy game name for testing
-    resources:'game',
-  },
+    params: {
+      search: search,
+      limit: 25,
+      fields: "*",
+    },
+
+})
+  .then(response => {
+      console.log(response.data);
+      res.render('pages/discover',{
+        response,
+      })
   })
-  .then(results => {
-    console.log(results.data.results); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
-    res.render('pages/search', {
-      results,
-    });
-  })
-  .catch(error => {
-    console.log(error);
-    res.render("pages/search", {
-      results: [],
-    });
-    // Handle errors
+  .catch(err => {
+      console.error(err);
   });
-  });
+
+});
 
 //Logout
 app.get('/logout', (req, res) => {
