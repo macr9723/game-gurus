@@ -213,78 +213,88 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/discover', (req, res) => {
-  const highest_rated_games =  axios({
-    url: "https://api.igdb.com/v4/games",
-    method: 'POST',
+  const latestGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
     headers: {
-        'Accept': 'application/json',
-        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-        'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
+      'user-agent': 'newcoder',
     },
-    data: "fields name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
-
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_release_date',
+      sort: 'original_release_date:desc',
+    },
   });
 
-
-  const newest_games = axios({
-    url: "https://api.igdb.com/v4/games",
-    method: 'POST',
+  const highestRatedGamesRequest = axios({
+    url: 'https://www.giantbomb.com/api/games',
+    method: 'GET',
+    dataType: 'json',
     headers: {
-        'Accept': 'application/json',
-        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-        'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
+      'user-agent': 'newcoder',
     },
-    data: 'fields name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 10;'
-
+    params: {
+      api_key: process.env.API_KEY,
+      limit: 25,
+      format: 'json',
+      field_list: 'image,name,original_game_rating',
+      sort: 'original_game_rating:desc',
+    },
   });
 
-  Promise.all([highest_rated_games, newest_games])
+  Promise.all([latestGamesRequest, highestRatedGamesRequest])
     .then(results => {
-      const highest_rated_games = results[0].data;
-      const newest_games = results[1].data;
+      const latestGames = results[0].data.results;
+      const highestRatedGames = results[1].data.results;
       res.render('pages/discover', {
-        highest_rated_games,
-        newest_games,
+        latestGames,
+        highestRatedGames,
       });
     })
     .catch(error => {
       console.log(error);
       res.render('pages/discover', {
-        highest_rated_games: [],
-        newest_games: [],
+        latestGames: [],
+        highestRatedGames: [],
       });
     });
 });
 
-app.get("/search",(req,res)=>{
+app.get('/search', (req,res)=>{
+
   const search = req.query.search;
-
   axios({
-  url: "https://api.igdb.com/v4/games",
-  method: 'POST',
+  url: "https://www.giantbomb.com/api/search",
+  method: 'GET',
+  dataType: 'json',
   headers: {
-      'Accept': 'application/json',
-      'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-      'Authorization': 'Bearer l8ftzy91r1p95hvg1iezizcrkh3gbl',
+    'user-agent':'newcoder',
   },
-    params: {
-      search: search,
-      limit: 25,
-      fields: "*",
-    },
-
-})
-  .then(response => {
-      console.log(response.data);
-      res.render('pages/discover',{
-        response,
-      })
+  params: {
+    api_key: process.env.API_KEY,
+    limit: 10,
+    format: 'json',
+    query: search, // this will be replaced with req.body.search, allowing the user to pass in a game title to search for, replace this for now with whatever dummy game name for testing
+    resources:'game',
+  },
   })
-  .catch(err => {
-      console.error(err);
+  .then(results => {
+    console.log(results.data.results); // the results will be displayed on the terminal if the docker containers are running // Send some parameters
+    res.render('pages/search', {
+      results,
+    });
+  })
+  .catch(error => {
+    console.log(error);
+    res.render("pages/search", {
+      results: [],
+    });
+    // Handle errors
   });
-
-});
+  });
 
 //Logout
 app.get('/logout', (req, res) => {
