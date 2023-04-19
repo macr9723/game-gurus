@@ -221,7 +221,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
+    data: "fields id,name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
 
   });
 
@@ -234,7 +234,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 25;"
+    data: "fields id,name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 25;"
 
   });
 
@@ -270,7 +270,7 @@ app.get("/search",(req,res)=>{
     params: {
       search: search,
       limit: 25,
-      fields: "name,cover.*",
+      fields: "id,name,cover.*",
     },
     
 
@@ -289,7 +289,7 @@ app.get("/search",(req,res)=>{
 
 app.get("/gamepage",(req,res)=>{
 
-  const game_id = req.body.id;
+  const game_name = req.body.name;
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -300,7 +300,8 @@ app.get("/gamepage",(req,res)=>{
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
       params: {
-        id: game_id,
+        search: game_name,
+        limit: 1,
         fields: "*",
       },
       
