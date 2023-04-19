@@ -287,6 +287,38 @@ app.get("/search",(req,res)=>{
 
 });
 
+app.get("/gamepage",(req,res)=>{
+
+  const game_id = req.body.id;
+
+  axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+      params: {
+        id: game_id,
+        fields: "*",
+      },
+      
+  
+  })
+    .then(response => {
+        console.log(response.data);
+        res.render('pages/game',{
+          data: response.data,
+        })
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+
+});
+
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
