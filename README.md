@@ -15,4 +15,4 @@
 - [Here](https://docs.google.com/document/d/1yH0WpI1xJerLbbXM1trn9cCRhVGhJZvdjHoIMOE_Lx8/edit?usp=sharing)
 
 ### Link to Test Branch
-- [Here] (https://github.com/macr9723/game-gurus/tree/Test)
+(https://github.com/macr9723/game-gurus/tree/Test)
