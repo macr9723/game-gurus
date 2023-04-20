@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS games (
 );
 
 CREATE TABLE IF NOT EXISTS users_to_games (
-    game_id NOT NULL REFERENCES games (game_id),
-    username NOT NULL REFERENCES users (username)
+    game_id INTEGER NOT NULL REFERENCES games (game_id),
+    username VARCHAR(50) NOT NULL REFERENCES users (username)
 );
 
 
