@@ -1,0 +1,31 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+        <h1>My Library</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% games.forEach(el => { %>
+                    <tr>
+                        <td> <%= el.name %></td>
+                        <td> <%= el.rating %></td>
+                        <td> <%= el.review %></td>
+                    </tr>           
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+
+
+<%- include ('../partials/footer') %>
