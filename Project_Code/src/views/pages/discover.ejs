@@ -5,7 +5,7 @@
   <div class="card-row">
     <% highest_rated_games.forEach(event => { %>
       <div class="card">
-        <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+        <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
         <% if (event.cover) { %>
           <% 
           let coverURL = event.cover.url;
@@ -15,6 +15,7 @@
         <% } else { %>
           <p>Image Not Found</p>
         <% } %>
+      </a>
       </div>
     <% }) %>
   </div>
@@ -24,7 +25,7 @@
   <div class="card-row">
     <% newest_games.forEach(event => { %>
       <div class="card">
-        <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+        <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
         <% if (event.cover) { %>
           <% 
           let coverURL = event.cover.url;
@@ -34,6 +35,7 @@
         <% } else { %>
           <p>Image Not Found</p>
         <% } %>
+      </a>
       </div>
     <% }) %>
   </div>
