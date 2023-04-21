@@ -1,177 +1,176 @@
 /*CSS is added by referencing the style.css in header. But we need to add var path = require('path');
 app.use(express.static(path.join(__dirname, 'resources'))); which is added in index.js
- */ 
+ */
 
 /* Font being used in the header and game image labels - Akkurat
 Add any new font0-face between this and the next comment. Also add the font.ttf or
 font.eot in /resources/css/fonts. */
-  @font-face {
-  font-family: 'Akkurat';
-  src: url('/css/fonts/Akkurat.ttf') format('truetype');
+@font-face {
+  font-family: "Akkurat";
+  src: url("/css/fonts/Akkurat.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 /*CSS for the cards used in the discover and search page */
-      .card-row {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: scroll;
-      }
-      .card-row::-webkit-scrollbar {
-        display: none;
-      }
-      
-  
-      .card {
-        flex: 0 0 auto;
-        margin-right: 5px;
-        padding: 0px;
-        border: 5px solid #000000;
-        border-radius: 5px;
-        width: 200px;
-      }
-  
-      .card img {
-        width: 100%;
-        height: 100%;
-        margin-bottom: 0;
-      }
-  
-      .card p {
-        margin-top: 0;
-        margin-bottom: 10px;
-      }
-  
-      .card a {
-        display: block;
-        width: 100%;
-        text-align: center;
-      }
+.card-row {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+}
+.card-row::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  padding: 0px;
+  border: 5px solid #000000;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 0;
+}
+
+.card p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.card a {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
 /*CSS style for header that makes it fixed as well as adds a black color to the menu bar
 Body adds a black background to the entire website. But it cant be changed to the body
 of just specific pages.*/
-      header {
-        --vh: 7.89px;
-        color: #000;
-        -webkit-text-size-adjust: none;
-        -webkit-font-smoothing: antialiased;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font: inherit;
-        vertical-align: baseline;
-        display: block;
-        z-index: 100;
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        user-select: none;
-        mix-blend-mode: difference;
-        opacity: 1;
-      }
+header {
+  --vh: 7.89px;
+  color: #000;
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  display: block;
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  user-select: none;
+  mix-blend-mode: difference;
+  opacity: 1;
+}
 
-      body{
-        padding-top: 100px;
-        background-color: #000;
-      }
+body {
+  padding-top: 100px;
+  background-color: #000;
+}
 
 /*CSS for the fonts in the header including logo and image labels(Potentially can be used anywhere on the website*/
-      .link-default{
-      -webkit-text-size-adjust: none;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      font: inherit;
-      font-family: Akkurat;
-      font-size: .78125vw;
-      text-transform: uppercase;
-      color: #fff;
-      }
-      .link{
-      -webkit-text-size-adjust: none;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      margin-right: 0;
-      padding: 0;
-      border: 0;
-      font: inherit;
-      vertical-align: baseline;
-      display: flex;
-      font-family: Akkurat;
-      font-size: .78125vw;
-      text-transform: uppercase;
-      color: #fff;
-      text-decoration: none;
-      position: relative;
-      height: max-content;
-      width: fit-content;
-      margin-left: 15px;
-      }
+.link-default {
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  font: inherit;
+  font-family: Akkurat;
+  font-size: 0.78125vw;
+  text-transform: uppercase;
+  color: #fff;
+}
+.link {
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  margin-right: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  display: flex;
+  font-family: Akkurat;
+  font-size: 0.78125vw;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  height: max-content;
+  width: fit-content;
+  margin-left: 15px;
+}
 
-      .logo{
-      -webkit-text-size-adjust: none;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      -webkit-user-drag: none;
-      padding: 0;
-      border: 0;
-      font: inherit;
-      vertical-align: baseline;
-      display: flex;
-      font-family: Akkurat;
-      font-size: 3vw;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-decoration: none;
-      margin: 0;
-      height: max-content;
-      width: fit-content;
-      position: relative;
-      right : 30px;
-      }
+.logo {
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-drag: none;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  display: flex;
+  font-family: Akkurat;
+  font-size: 3vw;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0;
+  height: max-content;
+  width: fit-content;
+  position: relative;
+  right: 30px;
+}
 
-    .link2{
-      -webkit-text-size-adjust: none;
-      -webkit-font-smoothing: antialiased;
-      user-select: none;
-      margin-right: 15px;
-      padding: 0;
-      border: 0;
-      font: inherit;
-      vertical-align: baseline;
-      display: flex;
-      font-family: Akkurat;
-      font-size: .78125vw;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-decoration: none;
-      position: relative;
-      height: max-content;
-      width: fit-content;
-      margin-left: 0;
-      background-color: black;
-      }
+.link2 {
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  margin-right: 15px;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  display: flex;
+  font-family: Akkurat;
+  font-size: 0.78125vw;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-decoration: none;
+  position: relative;
+  height: max-content;
+  width: fit-content;
+  margin-left: 0;
+  background-color: black;
+}
 
-      .link:hover{
-        color: #16FF00;
-      }
+.link:hover {
+  color: #16ff00;
+}
 
-      .link2:hover{
-        color: #16FF00;
-      }
+.link2:hover {
+  color: #16ff00;
+}
 /*CSS for the search bar */
-      .search-bar {
-        border: none;
-        border-bottom: 2px solid #000000;
-        background-color: #000000;
-        color: #ffffff;
-        font-family: Akkurat;
-        font-size: 15px;
-        width: 200px;
-      }
-      
-      .search-bar:focus {
-        outline: none;
-        border-bottom: 2px solid #ffffff;
-      }
+.search-bar {
+  border: none;
+  border-bottom: 2px solid #000000;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: Akkurat;
+  font-size: 15px;
+  width: 200px;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-bottom: 2px solid #ffffff;
+}

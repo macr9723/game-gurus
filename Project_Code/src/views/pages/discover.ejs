@@ -1,22 +1,18 @@
-<%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
 <div class="container-fluid-1">
   <h1 class="link2">Highest Rated Games</h1>
   <div class="card-row">
     <% highest_rated_games.forEach(event => { %>
-      <div class="card">
-        <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-        <% if (event.cover) { %>
-          <% 
-          let coverURL = event.cover.url;
-          let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
-          %>
-          <img src="<%=coverURLBig %>" alt="<%=event.name %>">
-        <% } else { %>
-          <p>Image Not Found</p>
-        <% } %>
-      </div>
+    <div class="card">
+      <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+      <% if (event.cover) { %> <% let coverURL = event.cover.url; let
+      coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+      <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
+      <% } else { %>
+      <p>Image Not Found</p>
+      <% } %>
+    </div>
     <% }) %>
   </div>
 </div>
@@ -24,20 +20,17 @@
   <h1 class="link2">Latest Games</h1>
   <div class="card-row">
     <% newest_games.forEach(event => { %>
-      <div class="card">
-        <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-        <% if (event.cover) { %>
-          <% 
-          let coverURL = event.cover.url;
-          let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
-          %>
-          <img src="<%=coverURLBig %>" alt="<%=event.name %>">
-        <% } else { %>
-          <p>Image Not Found</p>
-        <% } %>
-      </div>
+    <div class="card">
+      <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+      <% if (event.cover) { %> <% let coverURL = event.cover.url; let
+      coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+      <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
+      <% } else { %>
+      <p>Image Not Found</p>
+      <% } %>
+    </div>
     <% }) %>
   </div>
-</div> 
+</div>
 
-<%- include ('../partials/footer') %> 
+<%- include ('../partials/footer') %>
