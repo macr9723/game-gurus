@@ -312,8 +312,29 @@ app.get("/gamepage/:id",(req,res)=>{
     .catch(err => {
         console.error(err);
     });
+  });
 
+app.get('/information', async (req, res) => {
+  const findUsergames = `SELECT * FROM entries INNER JOIN games
+  ON entries.game_id = games.game_id INNER JOIN reviews
+  ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
+  ON entries.entry_id = users_to_entries.entry_id
+  WHERE users_to_entries.username = $1;`;
 
+  db.any(findUsergames, [req.session.user.username])
+  .then((games) => {
+    console.log(games)
+    res.render("pages/dashboard", {
+      games,
+    });
+  })
+  .catch((err) => {
+    res.render("pages/dashboard", {
+      games: [],
+      error: true,
+      message: err.message,
+    });
+  });
 });
 
 //Logout
