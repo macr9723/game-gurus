@@ -234,7 +234,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 25;"
+    data: "fields id,name,cover.*; sort release_dates.date desc;limit 25;"
 
   });
 
