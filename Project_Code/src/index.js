@@ -314,7 +314,7 @@ app.get("/gamepage/:id",(req,res)=>{
     });
   });
 
-app.get('/information', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
   const findUsergames = `SELECT * FROM entries INNER JOIN games
   ON entries.game_id = games.game_id INNER JOIN reviews
   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
@@ -337,6 +337,7 @@ app.get('/information', async (req, res) => {
   });
 });
 
+
 app.post('/add_game', async (req,res) => {
   // db queries
   const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';
@@ -345,8 +346,8 @@ app.post('/add_game', async (req,res) => {
   const insertUsers_to_Entries = 'insert into users_to_entries (username, entry_id) values ($1, $2) returning * ;';
 
   // getting params
-  const game_id = req.body.game_id;
-  const name = req.body.name;
+  const game_id = req.body.gameId;
+  const name = req.body.gameName;
   const rating = req.body.rating;
   const review = req.body.review;
   
@@ -382,6 +383,7 @@ app.post('/add_game', async (req,res) => {
     res.render('pages/discover', { message: error.message });
   }
 });
+
 
 //Logout
 app.get('/logout', (req, res) => {
