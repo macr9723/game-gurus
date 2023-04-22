@@ -353,8 +353,9 @@ app.post('/add_game', async (req,res) => {
   
   // Before updating games table check if a game already exists in the database
   try {
+    console.log("game_id:", game_id);
     const [gameFound] = await db.any(`select game_id from games where game_id = $1`, [game_id])
-    if (!gameFound) {
+    if (gameFound.length==0) {
       db.any(insertGame, [game_id, name])
         .then(function (data) {
           res.status(201).json({
@@ -366,6 +367,8 @@ app.post('/add_game', async (req,res) => {
           return console.log(err);
         });
     }
+
+  
     // If the game is already in our database we can update the rest of the tables accordingly
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])

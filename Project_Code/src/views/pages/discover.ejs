@@ -16,7 +16,7 @@
           <p>Image Not Found</p>
         <% } %>
       </a>
-      <i class="fas fa-plus plus-icon" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
+      <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
     <% }) %>
   </div>
@@ -37,7 +37,7 @@
           <p>Image Not Found</p>
         <% } %>
       </a>
-      <i class="fas fa-plus plus-icon" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
+      <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
     <% }) %>
   </div>
@@ -54,7 +54,7 @@
       <div class="modal-body">
         <img src="" alt="Modal Image" id="modalImage">
         <form id="addGameForm">
-          <input type="hidden" name="game_id" id="gameId">
+          <input type="hidden" name="gameId" id="gameId">
           <input type="hidden" name="name" id="gameName">
           
           <div class="mb-3">
@@ -92,13 +92,26 @@
   });
 });
 
+function openModal(gameId, gameName) {
+  document.getElementById("gameId").value = gameId;
+  document.getElementById("gameName").value = gameName;
+}
+
 function submitAddGameForm() {
   const form = document.getElementById("addGameForm");
   const formData = new FormData(form);
+  const requestBody = {};
+
+  for (const [key, value] of formData.entries()) {
+    requestBody[key] = value;
+  }
 
   fetch("/add_game", {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
   })
     .then((response) => {
       if (response.ok) {
