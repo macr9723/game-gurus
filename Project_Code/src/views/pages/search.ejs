@@ -6,7 +6,7 @@
     <div class="card-row">
       <% data.forEach(event => { %>
         <div class="card">
-          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+          <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
           <% if (event.cover) { %>
             <% 
             let coverURL = event.cover.url;
@@ -16,6 +16,8 @@
           <% } else { %>
             <p>Image Not Found</p>
           <% } %>
+        </a>
+        <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
         </div>
       <% }) %>
     </div>

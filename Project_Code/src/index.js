@@ -299,8 +299,8 @@ app.get("/gamepage/:id",(req,res)=>{
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-      data: `fields *; where id = ${game_id};`
-      
+      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*; where id = ${game_id};`
+      //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
   
   })
     .then(response => {
