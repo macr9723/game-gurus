@@ -221,7 +221,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
+    data: "fields id,name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
 
   });
 
@@ -234,7 +234,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields name,cover.*; sort release_dates desc; where release_dates < 1676745711;limit 25;"
+    data: "fields id,name,cover.*; sort release_dates.date desc;limit 25;"
 
   });
 
@@ -270,7 +270,7 @@ app.get("/search",(req,res)=>{
     params: {
       search: search,
       limit: 25,
-      fields: "name,cover.*",
+      fields: "id,name,cover.*",
     },
     
 
@@ -287,7 +287,34 @@ app.get("/search",(req,res)=>{
 
 });
 
-app.get('/information', async (req, res) => {
+app.get("/gamepage/:id",(req,res)=>{
+
+  const game_id = req.params.id;
+
+  axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*; where id = ${game_id};`
+      //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
+  
+  })
+    .then(response => {
+        console.log(response.data);
+        res.render('pages/gamepage',{
+          data: response.data,
+        })
+    })
+    .catch(err => {
+        console.error(err);
+    });
+  });
+
+app.get('/dashboard', async (req, res) => {
   const findUsergames = `SELECT * FROM entries INNER JOIN games
   ON entries.game_id = games.game_id INNER JOIN reviews
   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
@@ -310,10 +337,60 @@ app.get('/information', async (req, res) => {
   });
 });
 
+
+app.post('/add_game', async (req,res) => {
+  // db queries
+  const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';
+  const insertReview = 'insert into reviews (review, rating) values ($1, $2) returning * ;';
+  const insertEntry = 'insert into entries (game_id, review_id) values ($1, $2) returning * ;';
+  const insertUsers_to_Entries = 'insert into users_to_entries (username, entry_id) values ($1, $2) returning * ;';
+
+  // getting params
+  const game_id = req.body.gameId;
+  const name = req.body.gameName;
+  const rating = req.body.rating;
+  const review = req.body.review;
+  
+  // Before updating games table check if a game already exists in the database
+  try {
+    console.log("game_id:", game_id);
+    const [gameFound] = await db.any(`select game_id from games where game_id = $1`, [game_id])
+    if (gameFound.length==0) {
+      db.any(insertGame, [game_id, name])
+        .then(function (data) {
+          res.status(201).json({
+          status: 'success',
+          data: data,
+          });
+        })
+        .catch(function (err) {
+          return console.log(err);
+        });
+    }
+
+  
+    // If the game is already in our database we can update the rest of the tables accordingly
+    const [newReview] = await db.any(insertReview, [review, rating])
+    const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
+    db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
+      .then(function (data) {
+        res.status(201).json({
+          status: 'success',
+          data: data,
+        });
+      })
+      .catch(function (err) {
+        return console.log(err);
+      })
+  } catch (error) {
+    res.render('pages/discover', { message: error.message });
+  }
+});
+
+
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-
   res.render("pages/login");
 });
 

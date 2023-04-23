@@ -11,33 +11,33 @@ INSERT INTO games (game_id, name) VALUES (1805, 'Crazy Taxi');
 INSERT INTO games (game_id, name) VALUES (26450, 'IllBleed');
 INSERT INTO games (game_id, name) VALUES (6844, 'LEGO Star Wars III: The Clone Wars');
 
-INSERT INTO reviews (review_id, review, rating) VALUES (1, 'ayaka is pretty :)', 8);
-INSERT INTO reviews (review_id, review, rating) VALUES (2, '160 hours so far', 9.9);
-INSERT INTO reviews (review_id, review, rating) VALUES (3, '2B or not 2B', 10);
-INSERT INTO reviews (review_id, review, rating) VALUES (4, 'dooming humanity is so fun', 8.9);
-INSERT INTO reviews (review_id, review, rating) VALUES (5, 'CRAAAAAAZY TAXIIIIII', 10);
-INSERT INTO reviews (review_id, review, rating) VALUES (6, 'SEGA DREAM CAST IS SUPERIOR', 8);
+INSERT INTO reviews (review, rating) VALUES ('ayaka is pretty :)', 8); --1
+INSERT INTO reviews (review, rating) VALUES ('160 hours so far', 9.9); --2
+INSERT INTO reviews (review, rating) VALUES ('2B or not 2B', 10); --3
+INSERT INTO reviews (review, rating) VALUES ('dooming humanity is so fun', 8.9); --4
+INSERT INTO reviews (review, rating) VALUES ('CRAAAAAAZY TAXIIIIII', 10); --5
+INSERT INTO reviews (review, rating) VALUES ('SEGA DREAM CAST IS SUPERIOR', 8); --6
 
-INSERT INTO reviews (review_id, review, rating) VALUES (7, 'ewwww', 1);
-INSERT INTO reviews (review_id, review, rating) VALUES (8, 'scrub', 1);
-INSERT INTO reviews (review_id, review, rating) VALUES (9, 'miiid', 1);
-INSERT INTO reviews (review_id, review, rating) VALUES (10, 'even more miiid', 1);
-INSERT INTO reviews (review_id, review, rating) VALUES (11, 'CRAAAAAAZY TAXIIIIII', 1);
-INSERT INTO reviews (review_id, review, rating) VALUES (12, 'best lego game', 20);
+INSERT INTO reviews (review, rating) VALUES ('ewwww', 1); --7
+INSERT INTO reviews (review, rating) VALUES ('scrub', 1); --8
+INSERT INTO reviews (review, rating) VALUES ('miiid', 1); --9
+INSERT INTO reviews (review, rating) VALUES ('even more miiid', 1); --10
+INSERT INTO reviews (review, rating) VALUES ('CRAAAAAAZY TAXIIIIII', 1); --11
+INSERT INTO reviews (review, rating) VALUES ('best lego game', 20); --12
 
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (1, 119277, 1);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (2, 138162, 2);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (3, 11208, 3);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (4, 80468, 4);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (5, 1805, 5);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (6, 26450, 6);
+INSERT INTO entries (game_id, review_id) VALUES (119277, 1); --1
+INSERT INTO entries (game_id, review_id) VALUES (138162, 2); --2
+INSERT INTO entries (game_id, review_id) VALUES (11208, 3); --3
+INSERT INTO entries (game_id, review_id) VALUES (80468, 4); --4
+INSERT INTO entries (game_id, review_id) VALUES (1805, 5); --5
+INSERT INTO entries (game_id, review_id) VALUES (26450, 6); --6
 
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (7, 119277, 7);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (8, 138162, 8);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (9, 11208, 9);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (10, 80468, 10);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (11, 1805, 11);
-INSERT INTO entries (entry_id, game_id, review_id) VALUES (12, 6844, 12);
+INSERT INTO entries (game_id, review_id) VALUES (119277, 7); --7
+INSERT INTO entries (game_id, review_id) VALUES (138162, 8); --8
+INSERT INTO entries (game_id, review_id) VALUES (11208, 9); --9
+INSERT INTO entries (game_id, review_id) VALUES (80468, 10); --10
+INSERT INTO entries (game_id, review_id) VALUES (1805, 11); --11
+INSERT INTO entries (game_id, review_id) VALUES (6844, 12); --12
 
 INSERT INTO users_to_entries (username, entry_id) VALUES ('ash_k', 1);
 INSERT INTO users_to_entries (username, entry_id) VALUES ('ash_k', 2);

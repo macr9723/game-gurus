@@ -11,6 +11,18 @@ font.eot in /resources/css/fonts. */
   font-weight: bold;
   font-style: normal;
 }
+@font-face {
+  font-family: "HafferTRIAL-Light";
+  src: url("/css/fonts/HafferTRIAL-Light.otf") format("opentype");
+  font-weight: light;
+  font-style: normal;
+}
+@font-face {
+  font-family: "HafferTRIAL-SemiBold";
+  src: url("/css/fonts/HafferTRIAL-SemiBold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
 
 /*CSS for the cards used in the discover and search page */
 .card-row {
@@ -28,13 +40,33 @@ font.eot in /resources/css/fonts. */
   padding: 0px;
   border: 5px solid #000000;
   border-radius: 5px;
-  width: 200px;
+  width: 250px;
+  overflow: hidden;
+  position: relative; 
+}
+.plus-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  color: #000000;
+  cursor: pointer;
+}
+.plus-icon:hover {
+  color: #16ff00;
 }
 
+#modalImage {
+  width: 40%; 
+  height: 40%; 
+  max-height: 400px; 
+  object-fit: contain; 
+}
 .card img {
   width: 100%;
   height: 100%;
   margin-bottom: 0;
+  object-fit: cover;
 }
 
 .card p {
@@ -60,7 +92,6 @@ header {
   border: 0;
   font: inherit;
   vertical-align: baseline;
-  display: block;
   z-index: 100;
   position: fixed;
   left: 0;
@@ -72,7 +103,7 @@ header {
 }
 
 body {
-  padding-top: 100px;
+  padding-top: 125px;
   background-color: #000;
 }
 
@@ -173,4 +204,87 @@ body {
 .search-bar:focus {
   outline: none;
   border-bottom: 2px solid #ffffff;
+}
+
+/*CSS for the + button */
+.btn {
+  background-color: #ffffff;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+.btn:hover {opacity: 1}
+
+/*CSS for the gamepage artwork */
+
+.custom-container {
+  position: absolute;
+  padding: 50px; 
+  overflow: hidden;
+  display: inline-block;
+}
+
+.custom-container::before {
+  content: "";
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  filter: blur(10px); /* increased blur to 100px */
+  opacity: 0.5;
+  z-index: -1;
+}
+
+
+.image-original, .image-blur {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-blur {
+  position: relative;
+  top: 0;
+  left: 0;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+.content-container {
+  top: 120px;
+  padding-left: 25px;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  box-sizing: border-box;
+
+}
+
+.container-fluid-3 {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.card-screenshot {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  padding: 1px;
+  border: 0px solid #000000;
+  border-radius: 5px;
+  height: auto;
+  width: 75%;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
 }
