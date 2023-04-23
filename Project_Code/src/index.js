@@ -212,6 +212,7 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
+
 app.get('/discover', (req, res) => {
   const highest_rated_games =  axios({
     url: "https://api.igdb.com/v4/games",
@@ -299,7 +300,7 @@ app.get("/gamepage/:id",(req,res)=>{
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*; where id = ${game_id};`
+      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*, platforms.plaform_logo.*; where id = ${game_id};`
       //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
   
   })
@@ -385,6 +386,95 @@ app.post('/add_game', async (req,res) => {
   } catch (error) {
     res.render('pages/discover', { message: error.message });
   }
+});
+
+const genreMapping = {
+  "Point-and-click": 2,
+  "Fighting": 4,
+  "Shooter": 5,
+  "Music": 7,
+  "Platform": 8,
+  "Puzzle": 9,
+  "Racing": 10,
+  "Real Time Strategy (RTS)": 11,
+  "Role-playing (RPG)": 12,
+  "Simulator": 13,
+  "Sport": 14,
+  "Strategy": 15,
+  "Turn-based Strategy (TBS)": 16,
+  "Tactical": 24,
+  "Quiz/Trivia": 26,
+  "Hack and slash/Beat 'em up": 25,
+  "Pinball": 30,
+  "Adventure": 31,
+  "Arcade": 32,
+  "Visual Novel": 34,
+  "Indie": 45,
+  "Card & Board Game": 39,
+  "MOBA": 42,
+};
+
+// app.get("/archive", (req, res) => {
+//   const search = req.query.search;
+//   const genres = req.query["genre[]"] || [];
+
+//   console.log("Genres from query:", genres);
+
+//   const genreIds = genres
+//     .map((genre) => genreMapping[genre])
+//     .filter((id) => id !== undefined)
+//     .join(",");
+
+//     const genreFilter = genreIds ? `where any(genres) = (${genreIds});` : "";
+//     const requestData = `fields id,name,cover.*; ${genreFilter} sort name asc;limit 5;`;
+
+//   axios({
+//     url: "https://api.igdb.com/v4/games",
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//       "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
+//       Authorization: `Bearer ${process.env.API_KEY}`,
+//     },
+//     data: requestData,
+//   })
+//     .then((response) => {
+//       console.log(response.data);
+//       res.render("pages/archive", {
+//         data: response.data,
+//       });
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// });
+
+app.get("/archive", (req, res) => {
+  const genre = req.query.genre;
+
+
+  const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
+  const requestData = `fields id,name,cover.*; ${genreId} sort name asc;limit 5;`;
+
+  axios({
+    url: "https://api.igdb.com/v4/games",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
+      Authorization: `Bearer ${process.env.API_KEY}`,
+    },
+    data: requestData,
+  })
+    .then((response) => {
+      console.log(response.data);
+      res.render("pages/archive", {
+        data: response.data,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
 
