@@ -1,57 +1,60 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
 
-<h1>Genres</h1>
-<div class="d-flex flex-wrap">
-  <div class="p-2 btn btn-dark" type="button">Point-and-click</div>
-  <div class="p-2">Fighting</div>
-  <div class="p-2">Shooter</div>
-  <div class="p-2">Music</div>
-  <div class="p-2">Platform</div>
-  <div class="p-2">Puzzle</div>
-  <div class="p-2">Racing</div>
-  <div class="p-2">Real Time Strategy (RTS)</div>
-  <div class="p-2">Role-playing (RPG)</div>
-  <div class="p-2">Simulator</div>
-  <div class="p-2">Sport</div>
-  <div class="p-2">Strategy</div>
-  <div class="p-2">Turn-based Strategy (TBS)</div>
-  <div class="p-2">Tactical</div>
-  <div class="p-2">Quiz/Trivia
-  <div class="p-2">Hack and Slash/Beat 'em up</div>
-  <div class="p-2">Pinball</div>
-  <div class="p-2">Adventure</div>
-  <div class="p-2">Arcade</div>
-  <div class="p-2">Visual Novel</div>
-  <div class="p-2">Indie</div>
-  <div class="p-2">Card & Board Game</div>
-  <div class="p-2">MOBA</div>
+<h1 class="link2">Genres</h1>
+<div class="d-flex flex-wrap" id="genre-container">
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Point-and-click</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Fighting</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Shooter</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Music</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Platform</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Puzzle</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Racing</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Real Time Strategy (RTS)</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Role-playing (RPG)</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Simulator</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Sport</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Strategy</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Turn-based Strategy (TBS)</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Tactical</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Quiz/Trivia</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Hack and slash/Beat 'em up</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Pinball</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Adventure</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Arcade</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Visual Novel</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Indie</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Card & Board Game</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">MOBA</div>
 </div>
+<button onclick="fetchGames()">Submit</button>
 
-<h1>Themes</h1>
+
+<h1 class="link2">Themes</h1>
 <div class="d-flex flex-wrap">
-  <div class="p-2">Fantasy</div>
-  <div class="p-2">Thriller</div>
-  <div class="p-2">Science Fiction</div>
-  <div class="p-2">Action</div>
-  <div class="p-2">Horror</div>
-  <div class="p-2">Survival</div>
-  <div class="p-2">Historical</div>
-  <div class="p-2">Stealth</div>
-  <div class="p-2">Buisness</div>
-  <div class="p-2">Comedy</div>
-  <div class="p-2">Drama</div>
-  <div class="p-2">Non-fiction</div>
-  <div class="p-2">Educational</div>
-  <div class="p-2">Sandbox</div>
-  <div class="p-2">Kids</div>
-  <div class="p-2">Open World</div>
-  <div class="p-2">Warfare</div>
-  <div class="p-2">4X (explore, expand, exploit, and exterminate)</div>
-  <div class="p-2">Mystery</div>
-  <div class="p-2">Party</div>
-  <div class="p-2">Romance</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Fantasy</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Thriller</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Science Fiction</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Action</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Horror</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Survival</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Historical</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Stealth</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Buisness</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Comedy</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Drama</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Non-fiction</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Educational</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Sandbox</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Kids</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Open World</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Warfare</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">4X (explore, expand, exploit, and exterminate)</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Mystery</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Party</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Romance</div>
 </div>
+<button onclick="fetchGames()">Submit</button>
 
 <div class="container-fluid-1">
     <h1 class="link2">Search Results</h1>
@@ -72,5 +75,52 @@
       <% }) %>
     </div>
 </div>
+
+<style>
+  .selected {
+    background-color: #007bff;
+    color: white;
+  }
+</style>
+
+<!-- <script>
+  function toggleGenre(button) {
+    button.classList.toggle("selected");
+    console.log("Toggle:", button.textContent);
+  }
+
+  function fetchGames() {
+    const genreButtons = document.querySelectorAll("#genre-container .selected");
+    const genres = Array.from(genreButtons).map((button) => button.textContent);
+    console.log("Selected genres:", genres);
+
+    const genreQueryParam = genres.map((genre) => `genre[]=${encodeURIComponent(genre)}`).join("&");
+
+    console.log("Genre query param:", genreQueryParam);
+    window.location.href = `/archive?${genreQueryParam}`;
+  }
+</script> -->
+
+<script>
+  function toggleGenre(button) {
+    button.classList.toggle("selected");
+    console.log("Toggle:", button.textContent);
+    fetchGames(button.textContent);
+
+  }
+  function fetchGames(genre) {
+    window.location.href = `/archive?genre=${encodeURIComponent(genre)}`;
+  }
+
+  function toggleTheme(button) {
+    button.classList.toggle("selected");
+    console.log("Toggle:", button.textContent);
+    fetchGames(button.textContent);
+
+  }
+  function fetchGames(theme) {
+    window.location.href = `/archive?theme=${encodeURIComponent(theme)}`;
+  }
+</script>
 
 <%- include ('../partials/footer') %> 
