@@ -1,0 +1,52 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<h1>Genres</h1>
+<div class="d-flex flex-row">
+  <div class="p-2">Flex item 1</div>
+  <div class="p-2">Flex item 2</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+</div>
+
+<h1>Themes</h1>
+<div class="d-flex flex-row">
+  <div class="p-2">Flex item 1</div>
+  <div class="p-2">Flex item 2</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+  <div class="p-2">Flex item 3</div>
+</div>
+
+<div class="container-fluid-1">
+    <h1 class="link2">Search Results</h1>
+    <div class="card-row">
+      <% data.forEach(event => { %>
+        <div class="card">
+          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+          <% if (event.cover) { %>
+            <% 
+            let coverURL = event.cover.url;
+            let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
+            %>
+            <img src="<%=coverURLBig %>" alt="<%=event.name %>">
+          <% } else { %>
+            <p>Image Not Found</p>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+</div>
+
+<%- include ('../partials/footer') %> 

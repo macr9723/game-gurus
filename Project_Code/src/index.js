@@ -212,6 +212,7 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
+
 app.get('/discover', (req, res) => {
   const highest_rated_games =  axios({
     url: "https://api.igdb.com/v4/games",
