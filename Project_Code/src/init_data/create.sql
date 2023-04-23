@@ -4,8 +4,10 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS games (
-    game_id INT PRIMARY KEY NOT NULL,
-    name VARCHAR(100) NOT NULL
+    id SERIAL PRIMARY KEY,
+    game_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    UNIQUE(game_id)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
