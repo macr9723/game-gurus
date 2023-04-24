@@ -2,7 +2,7 @@
 <%- include ('../partials/menu') %>
 
 <h1 class="link2">Genres</h1>
-<div class="d-flex flex-wrap" id="genre-container">
+<div class="button-container">
   <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Point-and-click</div>
   <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Fighting</div>
   <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Shooter</div>
@@ -27,54 +27,52 @@
   <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Card & Board Game</div>
   <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">MOBA</div>
 </div>
-<button onclick="fetchGames()">Submit</button>
 
 
 <h1 class="link2">Themes</h1>
-<div class="d-flex flex-wrap">
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Fantasy</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Thriller</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Science Fiction</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Action</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Horror</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Survival</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Historical</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Stealth</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Buisness</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Comedy</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Drama</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Non-fiction</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Educational</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Sandbox</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Kids</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Open World</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Warfare</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">4X (explore, expand, exploit, and exterminate)</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Mystery</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Party</div>
-  <div class="p-2 btn btn-dark" type="button" onclick="toggleGenre(this)">Romance</div>
+<div class="button-container">
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Fantasy</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Thriller</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Science fiction</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Action</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Horror</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Survival</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Historical</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Stealth</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Business</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Comedy</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Drama</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Non-fiction</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Educational</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Sandbox</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Kids</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Open World</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Warfare</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">4X (explore, expand, exploit, and exterminate)</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Mystery</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Party</div>
+  <div class="p-2 btn btn-dark" type="button" onclick="toggleTheme(this)">Romance</div>
 </div>
-<button onclick="fetchGames()">Submit</button>
 
-<div class="container-fluid-1">
-    <h1 class="link2">Search Results</h1>
-    <div class="card-row">
-      <% data.forEach(event => { %>
+<div class="container-fluid-5">
+  <h1 class="link2">Game Archive</h1>
+  <div class="card-container">
+    <% data.forEach(event => { %>
+      <% if (event.cover) { %>
         <div class="card">
-          <a class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
-          <% if (event.cover) { %>
+          <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
             <% 
             let coverURL = event.cover.url;
             let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
             %>
             <img src="<%=coverURLBig %>" alt="<%=event.name %>">
-          <% } else { %>
-            <p>Image Not Found</p>
-          <% } %>
+          </a>
         </div>
-      <% }) %>
-    </div>
+      <% } %>
+    <% }) %>
+  </div>
 </div>
+
 
 <style>
   .selected {
@@ -105,21 +103,21 @@
   function toggleGenre(button) {
     button.classList.toggle("selected");
     console.log("Toggle:", button.textContent);
-    fetchGames(button.textContent);
-
-  }
-  function fetchGames(genre) {
-    window.location.href = `/archive?genre=${encodeURIComponent(genre)}`;
+    fetchGames('genre', button.textContent);
   }
 
   function toggleTheme(button) {
     button.classList.toggle("selected");
     console.log("Toggle:", button.textContent);
-    fetchGames(button.textContent);
-
+    fetchGames('theme', button.textContent);
   }
-  function fetchGames(theme) {
-    window.location.href = `/archive?theme=${encodeURIComponent(theme)}`;
+
+  function fetchGames(type, value) {
+    if (type === 'genre') {
+      window.location.href = `/archive?genre=${encodeURIComponent(value)}`;
+    } else if (type === 'theme') {
+      window.location.href = `/archive?theme=${encodeURIComponent(value)}`;
+    }
   }
 </script>
 

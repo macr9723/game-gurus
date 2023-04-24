@@ -41,6 +41,7 @@ font.eot in /resources/css/fonts. */
   border: 5px solid #000000;
   border-radius: 5px;
   width: 250px;
+  height: fit-content;
   overflow: hidden;
   position: relative; 
 }
@@ -287,4 +288,31 @@ body {
   overflow: hidden;
   position: relative;
   display: inline-block;
+}
+
+/*CSS for the archives */
+
+.button-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: auto;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.button-container::-webkit-scrollbar {
+  display: none;
+}
+
+.container-fluid-5 {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0;
 }
