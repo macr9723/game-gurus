@@ -1,0 +1,33 @@
+<!-- Modal Structure -->
+<div class="modal fade" id="AddGameModal" tabindex="-1" aria-labelledby="AddGameModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddGameModal" style="font-family: Akkurat;"> </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="" alt="Modal Image" id="modalImage">
+          <form id="addGameForm" action="/add_game" method="POST">
+            <input type="hidden" name="gameId" id="gameId" value="">
+            <input type="hidden" name="gameName" id="gameName">
+            
+            <div class="mb-3">
+              <label for="rating" class="form-label">Rating</label>
+              <input type="number" class="form-control" id="rating" name="rating" min="1" max="10" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="review" class="form-label">Review</label>
+              <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+            </div>
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: Akkurat;">Close</button>
+              <button type="submit" class="btn btn-primary" style="font-family: Akkurat;">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

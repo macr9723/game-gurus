@@ -33,9 +33,15 @@
           </div>
         <div class="d-flex flex-wrap mb-3">
             <% for(let i = 0; i < data[0].platforms.length; i++) { %>
-              <img source=" <%= data[0].platforms[i].platform_logo.url %>" alt="<%= data[0].platforms[i].name%>">
+              <% if(data[0].platforms.platform_logo) { %> 
+                <% 
+                let platformLogoURL = data[0].platforms[i].platform_logo.url;
+                %>
+                <img src="<%=platformLogoURL %>" alt = "<%= data[0].platforms[i].name%>">
+                <% } %>
             <% } %>
           </div>
+
         <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
       </div>
     </div>
@@ -58,6 +64,7 @@
   <div class="container-fluid-4">
     <h1 class="link2">Similar Games</h1>
     <div class="card-row">
+      <% if(data[0].similar_games) { %>
         <% for(let i = 0; i < data[0].similar_games.length; i++) { %>
         <div class="card">
           <a href="/gamepage/<%= data[0].similar_games[i].id %>" class="link2" aria-label="<%=data[0].similar_games[i].name %>"><%=data[0].similar_games[i].name %>
@@ -69,6 +76,7 @@
         </a>
         <i class="fas fa-plus plus-icon" onclick= "openModal('<%= data[0].similar_games[i].id %>', '<%= data[0].similar_games[i].name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
         </div>
+        <% } %>
       <% } %>
     </div>
   </div>
