@@ -1,31 +1,31 @@
-<%- include ('../partials/header') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
 <main>
-    <div class="container">
-        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-        <h1>My Library</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Comments</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% games.forEach(el => { %>
-                    <tr>
-                        <td> <%= el.name %></td>
-                        <td> <%= el.rating %></td>
-                        <td> <%= el.review %></td>
-                    </tr>           
-                <% }) %>
-            </tbody>
-        </table>
-    </div>
+  <div class="container">
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <h1 style="color: #fff; margin-bottom: 50px; text-decoration: underline">
+      My Library
+    </h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" style="color: #fff; font-size: x-large">Name</th>
+          <th scope="col" style="color: #fff; font-size: x-large">Rating</th>
+          <th scope="col" style="color: #fff; font-size: x-large">Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% games.forEach(el => { %>
+        <tr>
+          <!-- Want to have formatting dependent on 'value' of entry in table, e.g. 10/10 rating gets green color, 5 gets yellow, 1 gets red, etc.-->
+          <td style="color: antiquewhite"><%= el.name %></td>
+          <td style="color: antiquewhite"><%= el.rating %></td>
+          <td style="color: antiquewhite"><%= el.review %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
 </main>
-
-
 
 <%- include ('../partials/footer') %>
