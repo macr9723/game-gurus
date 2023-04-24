@@ -49,13 +49,13 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="AddGameModal" style="font-family: Akkurat;">Modal Title</h5>
+        <h5 class="modal-title" id="AddGameModal" style="font-family: Akkurat;"> </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <img src="" alt="Modal Image" id="modalImage">
         <form id="addGameForm" action="/add_game" method="POST">
-          <input type="hidden" name="gameId" id="gameId">
+          <input type="hidden" name="gameId" id="gameId" value="">
           <input type="hidden" name="gameName" id="gameName">
           
           <div class="mb-3">
@@ -88,11 +88,17 @@
   plusIcons.forEach(icon => {
     icon.addEventListener('click', function() {
       const cardImage = icon.parentElement.querySelector('img');
+            
       modalImage.src = cardImage.src;
       modalImage.alt = cardImage.alt;
     });
   });
 });
+
+function openModal(gameId, gameName) { 
+  document.getElementById("gameId").value = gameId;
+  document.getElementById("gameName").value = gameName;
+}
 
 </script>
 

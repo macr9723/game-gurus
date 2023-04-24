@@ -357,19 +357,18 @@ app.post('/add_game', async (req,res) => {
   // Before updating games table check if a game already exists in the database
   try {
     console.log("game_id:", game_id);
-    const [gameFound] = await db.any(`select game_id from games where game_id = $1`, [game_id])
-    if (gameFound.length==0) {
+    const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
       db.any(insertGame, [game_id, name])
         .then(function (data) {
-          res.status(201).json({
-          status: 'success',
-          data: data,
-          });
+          // res.status(201).json({
+          // status: 'success',
+          // data: data,
+          // });
+          res.redirect('/discover');
         })
         .catch(function (err) {
           return console.log(err);
         });
-    }
 
   
     // If the game is already in our database we can update the rest of the tables accordingly
@@ -386,7 +385,9 @@ app.post('/add_game', async (req,res) => {
         return console.log(err);
       })
   } catch (error) {
-    res.render('pages/discover', { message: error.message });
+    // res.render('/discover', { message: error.message });
+    res.redirect('/discover');
+
   }
   } else {
     res.render('pages/login', { message: 'Please login to add a game' });
