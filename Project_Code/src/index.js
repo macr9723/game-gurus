@@ -235,10 +235,11 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort hypes asc; limit 25;"
-
+    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 25;"
 
   });
+
+
 
   Promise.all([highest_rated_games, newest_games])
     .then(results => {
@@ -327,7 +328,7 @@ app.get('/dashboard', async (req, res) => {
   .then((games) => {
     console.log(games)
     res.render("pages/dashboard", {
-      games,
+      games,user
     });
   })
   .catch((err) => {

@@ -5,20 +5,18 @@
   <h1 class="link2">Highest Rated Games</h1>
   <div class="card-row">
     <% highest_rated_games.forEach(event => { %>
+      <% if (event.cover) { %>
       <div class="card">
         <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
-        <% if (event.cover) { %>
           <% 
           let coverURL = event.cover.url;
           let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
           %>
           <img src="<%=coverURLBig %>" alt="<%=event.name %>">
-        <% } else { %>
-          <p>Image Not Found</p>
-        <% } %>
       </a>
       <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
+      <% } %>
     <% }) %>
   </div>
 </div>
@@ -26,20 +24,18 @@
   <h1 class="link2">Latest Games</h1>
   <div class="card-row">
     <% newest_games.forEach(event => { %>
+      <% if (event.cover) { %>
       <div class="card">
         <a href="/gamepage/<%= event.id %>" class="link2" aria-label="<%=event.name %>"><%=event.name %>
-        <% if (event.cover) { %>
           <% 
           let coverURL = event.cover.url;
           let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
           %>
           <img src="<%=coverURLBig %>" alt="<%=event.name %>">
-        <% } else { %>
-          <p>Image Not Found</p>
-        <% } %>
       </a>
       <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
+      <% } %>
     <% }) %>
   </div>
 </div>
