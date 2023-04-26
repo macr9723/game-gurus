@@ -3,19 +3,15 @@
 <div class="container-fluid-1">
   <h1 class="link2">Highest Rated Games</h1>
   <div class="card-row">
-    <% highest_rated_games.forEach(event => { %>
+    <% highest_rated_games.forEach(event => { %> <% if (event.cover) { %>
     <div class="card">
       <a
         href="/gamepage/<%= event.id %>"
         class="link2"
         aria-label="<%=event.name %>"
-        ><%=event.name %> <% if (event.cover) { %> <% let coverURL =
-        event.cover.url; let coverURLBig = coverURL.replace('t_thumb',
-        't_cover_big_2x'); %>
+        ><%=event.name %> <% let coverURL = event.cover.url; let coverURLBig =
+        coverURL.replace('t_thumb', 't_cover_big_2x'); %>
         <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
-        <% } else { %>
-        <p>Image Not Found</p>
-        <% } %>
       </a>
       <i
         class="fas fa-plus plus-icon"
@@ -24,25 +20,21 @@
         data-bs-target="#AddGameModal"
       ></i>
     </div>
-    <% }) %>
+    <% } %> <% }) %>
   </div>
 </div>
 <div class="container-fluid-2">
   <h1 class="link2">Latest Games</h1>
   <div class="card-row">
-    <% newest_games.forEach(event => { %>
+    <% newest_games.forEach(event => { %> <% if (event.cover) { %>
     <div class="card">
       <a
         href="/gamepage/<%= event.id %>"
         class="link2"
         aria-label="<%=event.name %>"
-        ><%=event.name %> <% if (event.cover) { %> <% let coverURL =
-        event.cover.url; let coverURLBig = coverURL.replace('t_thumb',
-        't_cover_big_2x'); %>
+        ><%=event.name %> <% let coverURL = event.cover.url; let coverURLBig =
+        coverURL.replace('t_thumb', 't_cover_big_2x'); %>
         <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
-        <% } else { %>
-        <p>Image Not Found</p>
-        <% } %>
       </a>
       <i
         class="fas fa-plus plus-icon"
@@ -51,83 +43,11 @@
         data-bs-target="#AddGameModal"
       ></i>
     </div>
-    <% }) %>
+    <% } %> <% }) %>
   </div>
 </div>
 
-<!-- Modal Structure -->
-<div
-  class="modal fade"
-  id="AddGameModal"
-  tabindex="-1"
-  aria-labelledby="AddGameModal"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="AddGameModal" style="font-family: Akkurat">
-          Modal Title
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <img src="" alt="Modal Image" id="modalImage" />
-        <form id="addGameForm">
-          <input type="hidden" name="gameId" id="gameId" />
-          <input type="hidden" name="name" id="gameName" />
-
-          <div class="mb-3">
-            <label for="rating" class="form-label">Rating</label>
-            <input
-              type="number"
-              class="form-control"
-              id="rating"
-              name="rating"
-              min="1"
-              max="10"
-              required
-            />
-          </div>
-
-          <div class="mb-3">
-            <label for="review" class="form-label">Review</label>
-            <textarea
-              class="form-control"
-              id="review"
-              name="review"
-              rows="3"
-              required
-            ></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-          style="font-family: Akkurat"
-        >
-          Close
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          onclick="submitAddGameForm()"
-          style="font-family: Akkurat"
-        >
-          Save changes
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<%- include ('../partials/modal') %>
 
 <script>
   // For using game images in modal
@@ -138,6 +58,7 @@
     plusIcons.forEach((icon) => {
       icon.addEventListener("click", function () {
         const cardImage = icon.parentElement.querySelector("img");
+
         modalImage.src = cardImage.src;
         modalImage.alt = cardImage.alt;
       });
@@ -148,6 +69,12 @@
     document.getElementById("gameId").value = gameId;
     document.getElementById("gameName").value = gameName;
   }
+</script>
+
+<!-- function openModal(gameId, gameName) { 
+  document.getElementById("gameId").value = gameId;
+  document.getElementById("gameName").value = gameName;
+}
 
   function submitAddGameForm() {
     const form = document.getElementById("addGameForm");
@@ -158,32 +85,29 @@
       requestBody[key] = value;
     }
 
-    fetch("/add_game", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
+  fetch("/add_game", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Error submitting the form");
+      }
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Error submitting the form");
-        }
-      })
-      .then((data) => {
-        console.log("Form submitted successfully", data);
-        // Close the modal
-        const modalInstance = bootstrap.Modal.getInstance(
-          document.getElementById("AddGameModal")
-        );
-        modalInstance.hide();
-      })
-      .catch((error) => {
-        console.error("Error submitting the form:", error.message);
-      });
-  }
-</script>
+    .then((data) => {
+      console.log("Form submitted successfully", data);
+      // Close the modal
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById("AddGameModal"));
+      modalInstance.hide();
+    })
+    .catch((error) => {
+      console.error("Error submitting the form:", error.message);
+    });
+}  -->
 
 <%- include ('../partials/footer') %>

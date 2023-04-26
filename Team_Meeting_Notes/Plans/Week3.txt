@@ -1,0 +1,20 @@
+What have we done since last week?
+- Archive FE & BE
+- Gamepage FE & BE
+- Dashboard FE & BE
+- Review Moodle
+- Updated SQL and added Queries
+
+What do we plan to do next week?
+- Polish Discover FE
+- Polish Archive BE
+  * make so multiple options can be clicked
+- Polish Dashboard FE
+- Polish Dashboard BE
+- Populating reviews on gamepage
+
+What challenges are we facing?
+- so many Nikita you have no idea
+- adding the games to the users library
+- navigating the foreign api in general
+- formating the dashboard

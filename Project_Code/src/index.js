@@ -235,9 +235,11 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name,cover.*; sort release_dates.date desc;limit 25;"
+    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 25;"
 
   });
+
+
 
   Promise.all([highest_rated_games, newest_games])
     .then(results => {
@@ -300,7 +302,7 @@ app.get("/gamepage/:id",(req,res)=>{
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*, platforms.plaform_logo.*; where id = ${game_id};`
+      data: `fields name,artworks.*,cover.*,  screenshots.*, summary, platforms.*, release_dates.*, similar_games.*, similar_games.cover.*; where id = ${game_id};`
       //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
   
   })
@@ -326,7 +328,7 @@ app.get('/dashboard', async (req, res) => {
   .then((games) => {
     console.log(games)
     res.render("pages/dashboard", {
-      games,
+      games,user
     });
   })
   .catch((err) => {
@@ -338,8 +340,8 @@ app.get('/dashboard', async (req, res) => {
   });
 });
 
-
 app.post('/add_game', async (req,res) => {
+  if (req.session && req.session.user) {
   // db queries
   const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';
   const insertReview = 'insert into reviews (review, rating) values ($1, $2) returning * ;';
@@ -355,36 +357,43 @@ app.post('/add_game', async (req,res) => {
   // Before updating games table check if a game already exists in the database
   try {
     console.log("game_id:", game_id);
-    const [gameFound] = await db.any(`select game_id from games where game_id = $1`, [game_id])
-    if (gameFound.length==0) {
+    const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
+    if(!gameFound){
       db.any(insertGame, [game_id, name])
-        .then(function (data) {
-          res.status(201).json({
-          status: 'success',
-          data: data,
-          });
-        })
-        .catch(function (err) {
-          return console.log(err);
-        });
+      .then(function (data) {
+        // res.status(201).json({
+        // status: 'success',
+        // data: data,
+        // });
+        res.redirect('/discover');
+      })
+      .catch(function (err) {
+        return console.log(err);
+      });
+
     }
 
-  
     // If the game is already in our database we can update the rest of the tables accordingly
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(function (data) {
-        res.status(201).json({
-          status: 'success',
-          data: data,
-        });
+      .then(function (data){
+        // res.status(201).json({
+        //   status: 'success',
+        //   data: data,
+        // });
+        res.redirect('/discover');
       })
       .catch(function (err) {
         return console.log(err);
       })
   } catch (error) {
-    res.render('pages/discover', { message: error.message });
+    // res.render('/discover', { message: error.message });
+    res.redirect('/discover');
+
+  }
+  } else {
+    res.render('pages/login', { message: 'Please login to add a game' });
   }
 });
 
@@ -407,12 +416,38 @@ const genreMapping = {
   "Hack and slash/Beat 'em up": 25,
   "Pinball": 30,
   "Adventure": 31,
-  "Arcade": 32,
+  "Arcade": 33,
   "Visual Novel": 34,
-  "Indie": 45,
-  "Card & Board Game": 39,
-  "MOBA": 42,
+  "Indie": 32,
+  "Card & Board Game": 35,
+  "MOBA": 36,
 };
+
+const themeMapping = {
+  "Fantasy": 17,
+  "Thriller": 20,
+  "Science fiction": 18,
+  "Action": 1,
+  "Horror": 19,
+  "Survival": 21,
+  "Historical": 22,
+  "Stealth": 23,
+  "Business": 28, // Note that there was a typo in the frontend code: "Buisness" should be "Business"
+  "Comedy": 27,
+  "Drama": 31,
+  "Non-fiction": 32,
+  "Educational": 34,
+  "Sandbox": 33,
+  "Kids": 35,
+  "Open World": 38,
+  "Warfare": 39,
+  "4X (explore, expand, exploit, and exterminate)": 41,
+  "Mystery": 43,
+  "Party": 40,
+  "Romance": 44
+};
+
+
 
 // app.get("/archive", (req, res) => {
 //   const search = req.query.search;
@@ -451,10 +486,11 @@ const genreMapping = {
 
 app.get("/archive", (req, res) => {
   const genre = req.query.genre;
-
+  const theme = req.query.theme;
 
   const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
-  const requestData = `fields id,name,cover.*; ${genreId} sort name asc;limit 5;`;
+  const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
+  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -478,6 +514,7 @@ app.get("/archive", (req, res) => {
 });
 
 
+
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
@@ -493,3 +530,4 @@ app.get('/logout', (req, res) => {
 // starting the server and keeping the connection open to listen for more requests
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
+
