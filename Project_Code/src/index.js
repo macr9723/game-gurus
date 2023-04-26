@@ -66,6 +66,7 @@ app.use(
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'resources')));
 
+
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
@@ -293,6 +294,8 @@ app.get("/search",(req,res)=>{
 app.get("/gamepage/:id",(req,res)=>{
 
   const game_id = req.params.id;
+  const query = 'SELECT DISTINCT users_to_entries.username, reviews.review FROM users_to_entries JOIN entries ON users_to_entries.entry_id = entries.entry_id JOIN reviews ON reviews.review_id = entries.review_id WHERE entries.game_id = $1;';
+
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -306,6 +309,7 @@ app.get("/gamepage/:id",(req,res)=>{
       //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
   
   })
+    .then(db.any(query, [req.session.user.username]))
     .then(response => {
         console.log(response.data);
         res.render('pages/gamepage',{
@@ -394,6 +398,7 @@ app.post('/add_game', async (req,res) => {
     res.render('pages/login', { message: 'Please login to add a game' });
   }
 });
+
 
 const genreMapping = {
   "Point-and-click": 2,

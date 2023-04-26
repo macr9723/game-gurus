@@ -40,9 +40,11 @@
                 <img src="<%=platformLogoURL %>" alt = "<%= data[0].platforms[i].name%>">
                 <% } %>
             <% } %>
-          </div>
-
+        </div>
         <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
+        <div>
+          <% el.g_review%>
+        </div>
       </div>
     </div>
     <div class="container-fluid-3">
