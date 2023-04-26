@@ -67,6 +67,7 @@
             %>
             <img src="<%=coverURLBig %>" alt="<%=event.name %>">
           </a>
+          <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
         </div>
       <% } %>
     <% }) %>
@@ -82,6 +83,29 @@
 </style>
 
 <%- include ('../partials/modal') %>
+
+<script>
+  // For using game images in modal
+  document.addEventListener('DOMContentLoaded', function() {
+  const plusIcons = document.querySelectorAll('.plus-icon');
+  const modalImage = document.getElementById('modalImage');
+
+  plusIcons.forEach(icon => {
+    icon.addEventListener('click', function() {
+      const cardImage = icon.parentElement.querySelector('img');
+            
+      modalImage.src = cardImage.src;
+      modalImage.alt = cardImage.alt;
+    });
+  });
+});
+
+function openModal(gameId, gameName) { 
+  document.getElementById("gameId").value = gameId;
+  document.getElementById("gameName").value = gameName;
+}
+
+</script>
 
 <!-- <script>
   function toggleGenre(button) {

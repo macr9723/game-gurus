@@ -1,6 +1,7 @@
 <%- include ('../partials/header') %> 
 <%- include ('../partials/menu') %>
 
+
 <div class="container-fluid">
     <div class="custom-container">
       <% if (data[0].artworks) { %>
@@ -68,6 +69,7 @@
     <div class="card-row">
       <% if(data[0].similar_games) { %>
         <% for(let i = 0; i < data[0].similar_games.length; i++) { %>
+          <% if(data[0].similar_games[i].cover) { %>
         <div class="card">
           <a href="/gamepage/<%= data[0].similar_games[i].id %>" class="link2" aria-label="<%=data[0].similar_games[i].name %>"><%=data[0].similar_games[i].name %>
             <% 
@@ -78,6 +80,7 @@
         </a>
         <i class="fas fa-plus plus-icon" onclick= "openModal('<%= data[0].similar_games[i].id %>', '<%= data[0].similar_games[i].name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
         </div>
+        <% } %>
         <% } %>
       <% } %>
     </div>
