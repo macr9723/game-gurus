@@ -26,3 +26,11 @@ CREATE TABLE IF NOT EXISTS users_to_entries (
     username VARCHAR(50) NOT NULL REFERENCES users (username),
     entry_id INT NOT NULL REFERENCES entries (entry_id)
 );
+
+CREATE OR REPLACE VIEW
+  top_3_reviews AS
+SELECT users_to_entries.username, reviews.review
+FROM users_to_entries
+JOIN entries ON users_to_entries.entry_id = entries.entry_id
+JOIN reviews ON reviews.review_id = review.review_id
+WHERE entries.game_id = ;
