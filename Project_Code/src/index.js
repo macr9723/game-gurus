@@ -340,7 +340,6 @@ app.get('/dashboard', async (req, res) => {
   });
 });
 
-
 app.post('/add_game', async (req,res) => {
   if (req.session && req.session.user) {
   // db queries
@@ -359,29 +358,39 @@ app.post('/add_game', async (req,res) => {
   try {
     console.log("game_id:", game_id);
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
-    if (!gameFound) {
+    if(!gameFound){
       db.any(insertGame, [game_id, name])
-        .then(
-          res.redirect('/discover')
-        )
-        .catch(function (err) {
-          return console.log(err);
-        });
+      .then(function (data) {
+        // res.status(201).json({
+        // status: 'success',
+        // data: data,
+        // });
+        res.redirect('/discover');
+      })
+      .catch(function (err) {
+        return console.log(err);
+      });
+
     }
-  
+
     // If the game is already in our database we can update the rest of the tables accordingly
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(
-        res.redirect('discover')
-      )
+      .then(function (data){
+        // res.status(201).json({
+        //   status: 'success',
+        //   data: data,
+        // });
+        res.redirect('/discover');
+      })
       .catch(function (err) {
         return console.log(err);
       })
   } catch (error) {
     // res.render('/discover', { message: error.message });
     res.redirect('/discover');
+
   }
   } else {
     res.render('pages/login', { message: 'Please login to add a game' });
