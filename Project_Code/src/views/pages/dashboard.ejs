@@ -1,30 +1,22 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
 <main>
-  <div class="container">
-    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-    <h1 style="color: #fff; margin-bottom: 50px; text-decoration: underline">
-    <%=user.username%>'s Library
-    </h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col" style="color: #fff; font-size: x-large">Name</th>
-          <th scope="col" style="color: #fff; font-size: x-large">Rating</th>
-          <th scope="col" style="color: #fff; font-size: x-large">Comments</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% games.forEach(el => { %>
-        <tr>
-          <!-- Want to have formatting dependent on 'value' of entry in table, e.g. 10/10 rating gets green color, 5 gets yellow, 1 gets red, etc.-->
-          <td style="color: antiquewhite"><%= el.name %></td>
-          <td style="color: antiquewhite"><%= el.rating %></td>
-          <td style="color: antiquewhite"><%= el.review %></td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
+  <div class="container-fluid-discover">
+    <h1>My Library</h1>
+    <div class="card-row">
+      <% games.forEach(game => { %> <% if (game.cover) { %>
+      <div class="card">
+        <a
+          href="/gamepage/<%= game.game_id %>"
+          class="link2"
+          aria-label="<%= game.name %>"
+          ><%= game.name %> <% let coverURL = game.cover.url; let coverURLBig =
+          coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+          <img src="<%= coverURLBig %>" alt="<%= game.name %>" />
+        </a>
+      </div>
+      <% } %> <% }) %>
+    </div>
   </div>
 </main>
 
