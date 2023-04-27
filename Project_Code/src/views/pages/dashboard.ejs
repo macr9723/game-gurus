@@ -1,48 +1,22 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
 <main>
-  <!---->
-  <h1> My Library</h1>
-  <div class="card-row">
-    <% games.forEach(game => { %>
+  <div class="container-fluid-discover">
+    <h1>My Library</h1>
+    <div class="card-row">
+      <% games.forEach(game => { %> <% if (game.cover) { %>
       <div class="card">
-        <a href="/gamepage/<%= game.id %>" class="link2" aria-label="<%=game.name %>"><%=game.name %>
-        <% if (game.cover) { %>
-          <% 
-          let coverURL = game.cover.url;
-          let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
-          %>
-          <img src="<%=coverURLBig %>" alt="<%=game.name %>">
-        <% } else { %>
-          <p>Image Not Found</p>
-        <% } %>
-      </a>
+        <a
+          href="/gamepage/<%= game.game_id %>"
+          class="link2"
+          aria-label="<%= game.name %>"
+          ><%= game.name %> <% let coverURL = game.cover.url; let coverURLBig =
+          coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+          <img src="<%= coverURLBig %>" alt="<%= game.name %>" />
+        </a>
       </div>
-    <% }) %>
-  </div>
-</div>
-
-    <!-- THE REST OF YOUR HTML CODE GOES HERE
-        <h1>My Library</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Comments</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% games.forEach(el => { %>
-                    <tr>
-                        <td> <%= el.name %></td>
-                        <td> <%= el.rating %></td>
-                        <td> <%= el.review %></td>
-                    </tr>           
-                <% }) %>
-            </tbody>
-        </table>
-      -->
+      <% } %> <% }) %>
+    </div>
   </div>
 </main>
 
