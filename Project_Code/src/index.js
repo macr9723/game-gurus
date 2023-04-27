@@ -66,7 +66,6 @@ app.use(
 var path = require('path');
 app.use(express.static(path.join(__dirname, 'resources')));
 
-
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
@@ -294,8 +293,6 @@ app.get("/search",(req,res)=>{
 app.get("/gamepage/:id",(req,res)=>{
 
   const game_id = req.params.id;
-  const query = 'SELECT DISTINCT users_to_entries.username, reviews.review FROM users_to_entries JOIN entries ON users_to_entries.entry_id = entries.entry_id JOIN reviews ON reviews.review_id = entries.review_id WHERE entries.game_id = $1;';
-
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -309,7 +306,6 @@ app.get("/gamepage/:id",(req,res)=>{
       //category,genres.*, involved_companies.*, ,storyline, tags.*, total_rating, total_rating_count
   
   })
-    .then(db.any(query, [req.session.user.username]))
     .then(response => {
         console.log(response.data);
         res.render('pages/gamepage',{
@@ -319,6 +315,29 @@ app.get("/gamepage/:id",(req,res)=>{
     .catch(err => {
         console.error(err);
     });
+  });
+
+  app.get('/get_reviews/:id', async (req, res) => {
+    const gameId = req.query.game_id;
+  
+    const findReviews = 
+    'SELECT DISTINCT users_to_entries.username, reviews.review FROM users_to_entries JOIN entries ON users_to_entries.entry_id = entries.entry_id JOIN reviews ON reviews.review_id = entries.review_id WHERE entries.game_id = $1;'
+    ;
+  
+    db.any(findReviews, [gameId])
+      .then((reviews) => {
+        console.log(reviews)
+        res.render("pages/reviews", {
+          reviews
+        });
+      })
+      .catch((err) => {
+        res.render("pages/reviews", {
+          reviews: [],
+          error: true,
+          message: err.message,
+        });
+      });
   });
 
 app.get('/dashboard', async (req, res) => {
@@ -344,6 +363,7 @@ app.get('/dashboard', async (req, res) => {
   });
 });
 
+
 app.post('/add_game', async (req,res) => {
   if (req.session && req.session.user) {
   // db queries
@@ -362,45 +382,34 @@ app.post('/add_game', async (req,res) => {
   try {
     console.log("game_id:", game_id);
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
-    if(!gameFound){
+    if (!gameFound) {
       db.any(insertGame, [game_id, name])
-      .then(function (data) {
-        // res.status(201).json({
-        // status: 'success',
-        // data: data,
-        // });
-        res.redirect('/discover');
-      })
-      .catch(function (err) {
-        return console.log(err);
-      });
-
+        .then(
+          res.redirect('/discover')
+        )
+        .catch(function (err) {
+          return console.log(err);
+        });
     }
-
+  
     // If the game is already in our database we can update the rest of the tables accordingly
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(function (data){
-        // res.status(201).json({
-        //   status: 'success',
-        //   data: data,
-        // });
-        res.redirect('/discover');
-      })
+      .then(
+        res.redirect('discover')
+      )
       .catch(function (err) {
         return console.log(err);
       })
   } catch (error) {
     // res.render('/discover', { message: error.message });
     res.redirect('/discover');
-
   }
   } else {
     res.render('pages/login', { message: 'Please login to add a game' });
   }
 });
-
 
 const genreMapping = {
   "Point-and-click": 2,
