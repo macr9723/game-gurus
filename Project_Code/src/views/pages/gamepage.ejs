@@ -46,8 +46,8 @@
         </div> -->
 
       <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
-      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].keywords %></div>
-      <div id="reviews-container">
+      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].keywords[0].name %>, <%=data[0].keywords[1].name %>, <%=data[0].keywords[2].name %></div>
+      <div id="reviews-container" class="container-fluid">
         <h1 class="link2">Top Reviews</h1>
           <% reviews.forEach(review => { %>
             <div class="review">
