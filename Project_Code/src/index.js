@@ -347,7 +347,10 @@ app.get("/gamepage/:id",(req,res)=>{
           },
           data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
         });
-  
+        
+        const gameData = response.data[0];
+        gameData.review = game.review;
+        gameData.rating = game.rating;
         return response.data[0];
       }));
   

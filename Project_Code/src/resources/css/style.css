@@ -318,8 +318,8 @@ body {
   gap: 0;
 }
 
-/* PLAN TO ADD A .CSS FOR DASHBOARD. -- Tony*/
-
-.table {
-  color: #fff;
+.gg-logo {
+  transform: translate3d(0px, 0%, 0px);
+  position: sticky;
+  top: 0;
 }
