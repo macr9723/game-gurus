@@ -1,23 +1,92 @@
 <%- include ('../partials/header') %> <%- include ('../partials/menu') %>
 
+<!-- <script>
+  function toggleReview(index) {
+    const reviewContainer = document.getElementById(
+      `review-container-${index}`
+    );
+    const display = reviewContainer.style.display;
+
+    if (display == "none") {
+      reviewContainer.style.display = "block";
+    } else {
+      reviewContainer.style.display = "none";
+    }
+  }
+</script> -->
 <main>
-  <div class="container-fluid-discover">
-    <h1>My Library</h1>
+  <div class="container-fluid-dashboard">
+    <h1 style="font-family: HafferTrial-Light; color: white">My Library</h1>
     <div class="card-row">
-      <% games.forEach(game => { %> <% if (game.cover) { %>
-      <div class="card">
-        <a
-          href="/gamepage/<%= game.game_id %>"
-          class="link2"
-          aria-label="<%= game.name %>"
+      <% games.forEach((game, index) => { %> <% if (game.cover) { %>
+      <div class="card"><a
+        href="/gamepage/<%= game.id %>"
+        class="link2"
+        aria-label="<%= game.name %>"
+        ><%= game.name %> <% let coverURL = game.cover.url; let coverURLBig =
+        coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+        <img src="<%= coverURLBig %>" alt="<%= game.name %>" />
+      </a></div>     
+      </div>
+      <% } %>
+      <div
+        class="review-container"
+        id="review-container-<%= index %>"
+        style="display: none"
+      >
+        <h3 style="font-family: HafferTrial-Light; color: white">
+          Your Review:
+        </h3>
+        <p style="font-family: HafferTrial-Light; color: white">
+          <%= game.review %>
+        </p>
+        <h3 style="font-family: HafferTrial-Light; color: white">
+          Your Rating:
+        </h3>
+        <p style="font-family: HafferTrial-Light; color: white">
+          <%= game.rating %>
+        </p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+  <!-- <div class="container-fluid-discover">
+    <h1 style="font-family: HafferTrial-Light; color: white">My Library</h1>
+    <div class="card-row">
+      <% games.forEach((game, index) => { %> <% if (game.cover) { %>
+      <div
+        class="card"
+        data-game-id="<%= game.game_id %>"
+        onclick="toggleReview('<%= index %>')"
+      >
+        <a href="#" class="link2" aria-label="<%= game.name %>"
           ><%= game.name %> <% let coverURL = game.cover.url; let coverURLBig =
           coverURL.replace('t_thumb', 't_cover_big_2x'); %>
           <img src="<%= coverURLBig %>" alt="<%= game.name %>" />
         </a>
       </div>
-      <% } %> <% }) %>
+      <% } %>
+      <div
+        class="review-container"
+        id="review-container-<%= index %>"
+        style="display: none"
+      >
+        <h3 style="font-family: HafferTrial-Light; color: white">
+          Your Review:
+        </h3>
+        <p style="font-family: HafferTrial-Light; color: white">
+          <%= game.review %>
+        </p>
+        <h3 style="font-family: HafferTrial-Light; color: white">
+          Your Rating:
+        </h3>
+        <p style="font-family: HafferTrial-Light; color: white">
+          <%= game.rating %>
+        </p>
+      </div>
+      <% }) %>
     </div>
-  </div>
+  </div> -->
 </main>
 
 <%- include ('../partials/footer') %>
