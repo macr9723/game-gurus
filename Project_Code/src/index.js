@@ -322,7 +322,8 @@ app.get("/gamepage/:id",(req,res)=>{
     ON entries.game_id = games.game_id INNER JOIN reviews
     ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
     ON entries.entry_id = users_to_entries.entry_id
-    WHERE users_to_entries.username = $1;`;
+    WHERE users_to_entries.username = $1
+    ORDER BY entries.entry_id DESC;`;
   
     db.any(findUsergames, [req.session.user.username])
     .then(async (games) => {
