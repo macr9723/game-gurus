@@ -26,6 +26,7 @@
         let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
         %>
         <img src="<%= coverURLBig %>">
+        <i class="fas fa-plus plus-icon" onclick= "openModal('<%= data[0].id %>', '<%= data[0].name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
       <div class="d-flex flex-column mb-3">
         <div class="d-flex flex-row align-items-baseline justify-content-around mb-3">
@@ -44,6 +45,18 @@
           </div>
 
         <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
+        <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].name %>, <%=data[0].name %>, <%=data[0].name %></div>
+        <div id="reviews-container" class="container-fluid">
+          <h1 style="font-family: HafferTrial-Light; color: white;">Top Reviews</h1>
+            <% reviews.forEach(review => { %>
+              <div class="review">
+                <a class="link" href="/userLibrary/<%= review.username %>">
+                  <h3 style="font-family: HafferTrial-Light; color: white;"><%= review.username %> - <%= review.rating %></h3>
+                </a>
+                <p style="font-family: HafferTrial-Light; color: white;"><%= review.review %></p>
+              </div>
+            <% }) %>
+        </div>
       </div>
     </div>
     <div class="container-fluid-3">
@@ -83,6 +96,30 @@
       <% } %>
     </div>
   </div>
+
+<%- include ('../partials/modal') %>
+
+<script>
+  // For using game images in modal
+  document.addEventListener("DOMContentLoaded", function () {
+    const plusIcons = document.querySelectorAll(".plus-icon");
+    const modalImage = document.getElementById("modalImage");
+
+    plusIcons.forEach((icon) => {
+      icon.addEventListener("click", function () {
+        const cardImage = icon.parentElement.querySelector("img");
+
+        modalImage.src = cardImage.src;
+        modalImage.alt = cardImage.alt;
+      });
+    });
+  });
+
+  function openModal(gameId, gameName) {
+    document.getElementById("gameId").value = gameId;
+    document.getElementById("gameName").value = gameName;
+  }
+</script>
   
 
 <%- include ('../partials/footer') %>
