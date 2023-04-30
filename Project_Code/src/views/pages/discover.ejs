@@ -1,4 +1,6 @@
-<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/header') %> 
+<%- include ('../partials/menu') %>
+<%- include ('../partials/modal') %>
 
 <div class="container-fluid-1">
   <h1 class="link2">Highest Rated Games</h1>
@@ -21,6 +23,21 @@
       ></i>
     </div>
     <% } %> <% }) %>
+  </div>
+</div>
+<div class="container-fluid-3">
+  <h1 class="link2">Popular Game Videos</h1>
+  <div class="card-row">
+    <% popular_game_videos.forEach(event => { %>
+      <% if (event.video_id) { %>
+      <div class="video">
+        <a href="/gamepage/<%= event.game %>" class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+        <% videoURL = 'https://www.youtube.com/embed/' + event.video_id %>
+        <iframe width="560" height="315" src="<%=videoURL %>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen alt="<%=event.name %>"></iframe>
+        <!-- <i class="fas fa-plus plus-icon" onclick= "openModal('<%= event.id %>', '<%= event.name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i> -->
+      </div>
+      <% } %>
+    <% }) %>
   </div>
 </div>
 <div class="container-fluid-2">
@@ -46,68 +63,5 @@
     <% } %> <% }) %>
   </div>
 </div>
-
-<%- include ('../partials/modal') %>
-
-<script>
-  // For using game images in modal
-  document.addEventListener("DOMContentLoaded", function () {
-    const plusIcons = document.querySelectorAll(".plus-icon");
-    const modalImage = document.getElementById("modalImage");
-
-    plusIcons.forEach((icon) => {
-      icon.addEventListener("click", function () {
-        const cardImage = icon.parentElement.querySelector("img");
-
-        modalImage.src = cardImage.src;
-        modalImage.alt = cardImage.alt;
-      });
-    });
-  });
-
-  function openModal(gameId, gameName) {
-    document.getElementById("gameId").value = gameId;
-    document.getElementById("gameName").value = gameName;
-  }
-</script>
-
-<!-- function openModal(gameId, gameName) { 
-  document.getElementById("gameId").value = gameId;
-  document.getElementById("gameName").value = gameName;
-}
-
-  function submitAddGameForm() {
-    const form = document.getElementById("addGameForm");
-    const formData = new FormData(form);
-    const requestBody = {};
-
-    for (const [key, value] of formData.entries()) {
-      requestBody[key] = value;
-    }
-
-  fetch("/add_game", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error submitting the form");
-      }
-    })
-    .then((data) => {
-      console.log("Form submitted successfully", data);
-      // Close the modal
-      const modalInstance = bootstrap.Modal.getInstance(document.getElementById("AddGameModal"));
-      modalInstance.hide();
-    })
-    .catch((error) => {
-      console.error("Error submitting the form:", error.message);
-    });
-}  -->
 
 <%- include ('../partials/footer') %>

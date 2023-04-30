@@ -35,31 +35,31 @@
           <div class="h1" style="font-family: HafferTrial-SemiBold; color: white;" ><%=data[0].name %></div>
           <div class="ms-auto h5" style="font-family: HafferTrial-Light; color: white;" > Release Date - <%=data[0].release_dates[0].human %></div>
         </div>
-      <!-- <div class="d-flex flex-wrap mb-3">
-          <% for(let i = 0; i < data[0].platforms.length; i++) { %>
-            <% if(data[0].platforms.platform_logo) { %> 
-              <% 
-              let platformLogoURL = data[0].platforms[i].platform_logo.url;
-              %>
-              <img src="<%=platformLogoURL %>" alt = "<%= data[0].platforms[i].name%>">
-              <% } %>
-          <% } %>
-        </div> -->
-
+      <div class="game-info-container">
+        <h1 class="link2">Platforms</h1>
+      <div class="d-flex flex-wrap mb-3">
+        <% for(let i = 0; i < data[0].platforms.length; i++) { %>
+          <div class="p-1" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].platforms[i].name %> </div>
+        <% } %>
       <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
-      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].keywords[0].name %>, <%=data[0].keywords[1].name %>, <%=data[0].keywords[2].name %></div>
-      <div id="reviews-container" class="container-fluid">
-        <h1 class="link2">Top Reviews</h1>
-          <% reviews.forEach(review => { %>
-            <div class="review">
-              <h3 style="font-family: HafferTrial-Light; color: white;"><%= review.username %> - <%= review.rating %></h3>
-              <p style="font-family: HafferTrial-Light; color: white;"><%= review.review %></p>
-            </div>
-          <% }) %>
+      <% if (data[0].keywords) { %>
+      <% for (let i = 0; i < data[0].keywords.length; i++) { %>
+      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].keywords[i].name %></div>
+      <% } %> 
+      <% } %>
         </div>
     </div>
+    <div id="reviews-container" class="container-fluid">
+      <h1 class="link2">Top Reviews</h1>
+        <% reviews.forEach(review => { %>
+          <div class="review">
+            <h3 style="font-family: HafferTrial-Light; color: white;"><%= review.username %> - <%= review.rating %></h3>
+            <p style="font-family: HafferTrial-Light; color: white;"><%= review.review %></p>
+          </div>
+        <% }) %>
   </div>
   </div>
+</div>
 </div>
   <div class="container-fluid-3">
       <h1 class="link2">Game Screenshots</h1>
@@ -76,7 +76,6 @@
         <% } %>
         <% } %>
       </div>
-  </div>
 <div class="container-fluid-4">
   <h1 class="link2">Similar Games</h1>
   <div class="card-row">

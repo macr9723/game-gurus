@@ -80,6 +80,20 @@ font.eot in /resources/css/fonts. */
   width: 100%;
   text-align: center;
 }
+
+.video {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  padding: 0px;
+  border: 5px solid #000000;
+  border-radius: 5px;
+  width: fit-content;
+  height: 315px;
+  margin-bottom: 0;
+  object-fit: contain;
+  position: relative;
+}
+
 /*CSS style for header that makes it fixed as well as adds a black color to the menu bar
 Body adds a black background to the entire website. But it cant be changed to the body
 of just specific pages.*/
@@ -158,7 +172,7 @@ body {
   margin: 0;
   height: max-content;
   width: fit-content;
-  position: relative;
+  position: sticky;
   right: 30px;
 }
 
@@ -289,6 +303,21 @@ body {
   overflow: hidden;
   position: relative;
   display: inline-block;
+}
+
+.game-info-container {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px;
+  border: 0px solid #000000;
+  border-radius: 5px;
+  height: auto;
+  width: 80%;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  background-color: #29253a;
 }
 
 /*CSS for the archives */

@@ -226,6 +226,17 @@ app.get('/discover', (req, res) => {
 
   });
 
+  const popular_game_videos =  axios({
+    url: "https://api.igdb.com/v4/game_videos",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields game, name, video_id; limit 5; where game != null;"
+
+  });
 
   const newest_games = axios({
     url: "https://api.igdb.com/v4/games",
@@ -241,12 +252,14 @@ app.get('/discover', (req, res) => {
 
 
 
-  Promise.all([highest_rated_games, newest_games])
+  Promise.all([highest_rated_games, popular_game_videos ,newest_games])
     .then(results => {
       const highest_rated_games = results[0].data;
-      const newest_games = results[1].data;
+      const popular_game_videos = results[1].data;
+      const newest_games = results[2].data;
       res.render('pages/discover', {
         highest_rated_games,
+        popular_game_videos,
         newest_games,
       });
     })
@@ -254,6 +267,7 @@ app.get('/discover', (req, res) => {
       console.log(error);
       res.render('pages/discover', {
         highest_rated_games: [],
+        popular_game_videos: [],
         newest_games: [],
       });
     });
@@ -330,53 +344,58 @@ app.get("/gamepage/:id", async (req, res) => {
       });
 });
 
-  app.get('/dashboard', async (req, res) => {
-    const findUsergames = `SELECT * FROM entries INNER JOIN games
-    ON entries.game_id = games.game_id INNER JOIN reviews
-    ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-    ON entries.entry_id = users_to_entries.entry_id
-    WHERE users_to_entries.username = $1;`;
-  
-    db.any(findUsergames, [req.session.user.username])
-    .then(async (games) => {
-      const uniqueGamesMap = new Map();
-  
-      games.forEach(game => {
-        if (!uniqueGamesMap.has(game.game_id)) {
-          uniqueGamesMap.set(game.game_id, game);
-        }
+app.get('/dashboard', async (req, res) => {
+  const findUsergames = `SELECT * FROM entries INNER JOIN games
+  ON entries.game_id = games.game_id INNER JOIN reviews
+  ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
+  ON entries.entry_id = users_to_entries.entry_id
+  WHERE users_to_entries.username = $1;`;
+
+  db.any(findUsergames, [req.session.user.username])
+  .then(async (games) => {
+    const uniqueGamesMap = new Map();
+
+    games.forEach(game => {
+      if (!uniqueGamesMap.has(game.game_id)) {
+        uniqueGamesMap.set(game.game_id, game);
+      }
+    });
+
+    const uniqueGames = Array.from(uniqueGamesMap.values());
+
+    const gameDetails = await Promise.all(uniqueGames.map(async (game) => {
+      const response = await axios({
+        url: "https://api.igdb.com/v4/games",
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+          'Authorization': `Bearer ${process.env.API_KEY}`,
+        },
+        data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
       });
-  
-      const uniqueGames = Array.from(uniqueGamesMap.values());
-  
-      const gameDetails = await Promise.all(uniqueGames.map(async (game) => {
-        const response = await axios({
-          url: "https://api.igdb.com/v4/games",
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-            'Authorization': `Bearer ${process.env.API_KEY}`,
-          },
-          data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
-        });
-  
-        return response.data[0];
-      }));
-  
-      res.render("pages/dashboard", {
-        games: gameDetails,
-        user
-      });
-    })
-    .catch((err) => {
-      res.render("pages/dashboard", {
-        games: [],
-        error: true,
-        message: err.message,
-      });
+
+      const gameData = response.data[0];
+      gameData.review = game.review;
+      gameData.rating = game.rating;
+      return gameData;
+    }));
+
+    res.render("pages/dashboard", {
+      games: gameDetails,
+      user
+    });
+  })
+  .catch((err) => {
+    res.render("pages/dashboard", {
+      games: [],
+      error: true,
+      message: err.message,
     });
   });
+});
+
+
   // app.get('/dashboard', async (req, res) => {
   //   const findUsergames = `SELECT * FROM entries INNER JOIN games
   //   ON entries.game_id = games.game_id INNER JOIN reviews
@@ -584,7 +603,7 @@ app.get("/archive", (req, res) => {
 
   const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
   const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
-  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
+  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort rating desc; limit 100;`;
 
   axios({
     url: "https://api.igdb.com/v4/games",
