@@ -12,9 +12,9 @@ INSERT INTO games (game_id, name) VALUES (26450, 'IllBleed');
 INSERT INTO games (game_id, name) VALUES (6844, 'LEGO Star Wars III: The Clone Wars');
 
 INSERT INTO reviews (review, rating) VALUES ('ayaka is pretty :)', 8); --1
-INSERT INTO reviews (review, rating) VALUES ('160 hours so far', 9.9); --2
+INSERT INTO reviews (review, rating) VALUES ('160 hours so far', 10); --2
 INSERT INTO reviews (review, rating) VALUES ('2B or not 2B', 10); --3
-INSERT INTO reviews (review, rating) VALUES ('dooming humanity is so fun', 8.9); --4
+INSERT INTO reviews (review, rating) VALUES ('dooming humanity is so fun', 9); --4
 INSERT INTO reviews (review, rating) VALUES ('CRAAAAAAZY TAXIIIIII', 10); --5
 INSERT INTO reviews (review, rating) VALUES ('SEGA DREAM CAST IS SUPERIOR', 8); --6
 

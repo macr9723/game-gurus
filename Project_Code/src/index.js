@@ -75,7 +75,7 @@ app.use(express.static(path.join(__dirname, 'resources')));
 //REGISTER API
 
 app.get('/', (req, res) => {
-  res.render('pages/login');
+  res.render('pages/discover');
 });
 
 app.get('/register', (req, res) => {
@@ -199,20 +199,6 @@ app.post('/login', async (req, res) => {
 	}
 });
 
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
-
-
 app.get('/discover', (req, res) => {
   const highest_rated_games =  axios({
     url: "https://api.igdb.com/v4/games",
@@ -329,6 +315,97 @@ app.get("/gamepage/:id",(req,res)=>{
       res.status(500).send("An error occurred while fetching the game data and reviews.");
     });
 });
+
+const genreMapping = {
+  "Point-and-click": 2,
+  "Fighting": 4,
+  "Shooter": 5,
+  "Music": 7,
+  "Platform": 8,
+  "Puzzle": 9,
+  "Racing": 10,
+  "Real Time Strategy (RTS)": 11,
+  "Role-playing (RPG)": 12,
+  "Simulator": 13,
+  "Sport": 14,
+  "Strategy": 15,
+  "Turn-based Strategy (TBS)": 16,
+  "Tactical": 24,
+  "Quiz/Trivia": 26,
+  "Hack and slash/Beat 'em up": 25,
+  "Pinball": 30,
+  "Adventure": 31,
+  "Arcade": 33,
+  "Visual Novel": 34,
+  "Indie": 32,
+  "Card & Board Game": 35,
+  "MOBA": 36,
+};
+
+const themeMapping = {
+  "Fantasy": 17,
+  "Thriller": 20,
+  "Science fiction": 18,
+  "Action": 1,
+  "Horror": 19,
+  "Survival": 21,
+  "Historical": 22,
+  "Stealth": 23,
+  "Business": 28, // Note that there was a typo in the frontend code: "Buisness" should be "Business"
+  "Comedy": 27,
+  "Drama": 31,
+  "Non-fiction": 32,
+  "Educational": 34,
+  "Sandbox": 33,
+  "Kids": 35,
+  "Open World": 38,
+  "Warfare": 39,
+  "4X (explore, expand, exploit, and exterminate)": 41,
+  "Mystery": 43,
+  "Party": 40,
+  "Romance": 44
+};
+
+app.get("/archive", (req, res) => {
+  const genre = req.query.genre;
+  const theme = req.query.theme;
+
+  const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
+  const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
+  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
+
+  axios({
+    url: "https://api.igdb.com/v4/games",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
+      Authorization: `Bearer ${process.env.API_KEY}`,
+    },
+    data: requestData,
+  })
+    .then((response) => {
+      console.log(response.data);
+      res.render("pages/archive", {
+        data: response.data,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
 
 app.get('/userLibrary/:username', async (req, res) => {
   const findUsergames = `SELECT * FROM entries INNER JOIN games
@@ -556,58 +633,6 @@ app.post('/add_game', async (req,res) => {
   }
 });
 
-const genreMapping = {
-  "Point-and-click": 2,
-  "Fighting": 4,
-  "Shooter": 5,
-  "Music": 7,
-  "Platform": 8,
-  "Puzzle": 9,
-  "Racing": 10,
-  "Real Time Strategy (RTS)": 11,
-  "Role-playing (RPG)": 12,
-  "Simulator": 13,
-  "Sport": 14,
-  "Strategy": 15,
-  "Turn-based Strategy (TBS)": 16,
-  "Tactical": 24,
-  "Quiz/Trivia": 26,
-  "Hack and slash/Beat 'em up": 25,
-  "Pinball": 30,
-  "Adventure": 31,
-  "Arcade": 33,
-  "Visual Novel": 34,
-  "Indie": 32,
-  "Card & Board Game": 35,
-  "MOBA": 36,
-};
-
-const themeMapping = {
-  "Fantasy": 17,
-  "Thriller": 20,
-  "Science fiction": 18,
-  "Action": 1,
-  "Horror": 19,
-  "Survival": 21,
-  "Historical": 22,
-  "Stealth": 23,
-  "Business": 28, // Note that there was a typo in the frontend code: "Buisness" should be "Business"
-  "Comedy": 27,
-  "Drama": 31,
-  "Non-fiction": 32,
-  "Educational": 34,
-  "Sandbox": 33,
-  "Kids": 35,
-  "Open World": 38,
-  "Warfare": 39,
-  "4X (explore, expand, exploit, and exterminate)": 41,
-  "Mystery": 43,
-  "Party": 40,
-  "Romance": 44
-};
-
-
-
 // app.get("/archive", (req, res) => {
 //   const search = req.query.search;
 //   const genres = req.query["genre[]"] || [];
@@ -643,41 +668,10 @@ const themeMapping = {
 //     });
 // });
 
-app.get("/archive", (req, res) => {
-  const genre = req.query.genre;
-  const theme = req.query.theme;
-
-  const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
-  const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
-  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
-
-  axios({
-    url: "https://api.igdb.com/v4/games",
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
-      Authorization: `Bearer ${process.env.API_KEY}`,
-    },
-    data: requestData,
-  })
-    .then((response) => {
-      console.log(response.data);
-      res.render("pages/archive", {
-        data: response.data,
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
-
-
-
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/login");
+  res.redirect("/discover");
 });
 
 
