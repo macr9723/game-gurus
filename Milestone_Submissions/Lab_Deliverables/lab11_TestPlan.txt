@@ -57,28 +57,20 @@ Results
 - Added games properly being displayed to the user in their library page
 - Proper messages being sent to user if they input invalid information for certain forms
 
-Feature 3: Edit A Review Pposted by the User
+Feature 3: Updating a Review
 
 Test Cases
-- Select the 'edit' button on an exiting review posted by the user
-- Select the 'edit' button on a review  posted by another user
-- Select the 'edit' button when no review currently exists
-- Select the 'save changes' button after completing the edit
+- Select a game that the user has already posted a review on and post another reivew with different information
 
 Data
-- A game in library with both an existing review and a non existing review
-- A game in library with a review posted by another user
+- A game in library with an existing review 
 
 Environment
 - Test users will already be logged onto the website and on the game library page. A typo will exist in an existing review and the
-user will be prompted to 'fix' the issue. Separate prompts will be given to 'edit' a review that doesn't belong to the current user and to 'edit'
-a review that doesn't exit. 
+user will be prompted to 'fix' the issue by posting another review on the game.
 
 Results
-- When the user selects the 'edit' button, the app should open a text box with the existing review inside that the user can manipulate
-- If the review is posted by a separate user, the edit button should be disabled and serve no function
-- If no review exists, the 'edit' button should be disabled and serve no function
-- After selecting the 'save changes' button, the old review should be replaced by the updated review, this updated review should be displayed in the game libary
+- When the user selects the game they have already posted a review on, a modal should pop up and allow them to post another reivew. Upon completion of the form to post a review, their previously existing review should be replaced with the one the user just posted. 
 
 Users
 - The test users will be made up of members within our group, along with peers in our software development recitation section. 
