@@ -434,6 +434,7 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/userLibrary/:username', async (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const findUsergames = `SELECT * FROM entries INNER JOIN games
   ON entries.game_id = games.game_id INNER JOIN reviews
   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
@@ -473,7 +474,8 @@ app.get('/userLibrary/:username', async (req, res) => {
   
       res.render("pages/userLibrary", {
         games: gameDetails,
-        username: req.params.username
+        username: req.params.username,
+        isLoggedIn 
       });
     })
     .catch((err) => {
@@ -486,6 +488,7 @@ app.get('/userLibrary/:username', async (req, res) => {
 });
 
 app.get('/dashboard', async (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const findUsergames = `SELECT * FROM entries INNER JOIN games
   ON entries.game_id = games.game_id INNER JOIN reviews
   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
@@ -525,7 +528,8 @@ app.get('/dashboard', async (req, res) => {
   
       res.render("pages/dashboard", {
         games: gameDetails,
-        user
+        user,
+        isLoggedIn
       });
     })
     .catch((err) => {
@@ -563,12 +567,12 @@ app.post('/add_game', async (req,res) => {
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
     if (!gameFound) {
       db.any(insertGame, [game_id, name])
-        .then(
-          res.redirect('/discover')
-        )
-        .catch(function (err) {
-          return console.log(err);
-        });
+        //.then(
+          //res.redirect('/discover')
+        //)
+        //.catch(function (err) {
+          //return console.log(err);
+        //});
     }
   
     // If the game is already in our database we can update the rest of the tables accordingly
