@@ -563,9 +563,9 @@ app.post('/add_game', async (req,res) => {
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
     if (!gameFound) {
       db.any(insertGame, [game_id, name])
-        .then(
-          res.redirect('/discover')
-        )
+        .then(function (data){
+          res.redirect('/discover');
+        })
         .catch(function (err) {
           return console.log(err);
         });
@@ -575,9 +575,9 @@ app.post('/add_game', async (req,res) => {
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(
-        res.redirect('discover')
-      )
+      .then(function (data){
+        res.redirect('discover');
+      })
       .catch(function (err) {
         return console.log(err);
       })
