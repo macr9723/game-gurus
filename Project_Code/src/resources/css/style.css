@@ -31,7 +31,14 @@ font.eot in /resources/css/fonts. */
   overflow-x: scroll;
 }
 .card-row::-webkit-scrollbar {
-  display: none;
+  width: 3px; /* Adjust this value for vertical scrollbars */
+  height: 3px; /* Adjust this value for horizontal scrollbars */
+  background-color: black;
+}
+
+.card-row::-webkit-scrollbar-thumb {
+  background-color: #16ff00; /* Adjust the color and opacity */
+  border-radius: 3px; /* Adjust the border-radius for rounded scrollbar */
 }
 
 .card {
@@ -45,6 +52,64 @@ font.eot in /resources/css/fonts. */
   overflow: hidden;
   position: relative;
 }
+
+.card-discover {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  padding: 32px;
+  border: 5px solid #000000;
+  border-radius: 20px;
+  width: 275px;
+  height: fit-content;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  grid-column-gap: 24px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+  background-color: #000000;
+  background-size: cover;
+  box-shadow: 0 0 82px rgba(0, 0, 0, .15);
+  height: 70vh;
+  flex-direction: column; 
+}
+
+.card-discover img {
+  width: 240px;
+  height: 66vh;
+  overflow: visible;
+  justify-content: center;
+  object-fit: cover;
+  transition: 0.3s ease;
+}
+
+.card-discover:hover img { 
+  object-fit: cover;
+  overflow: visible; 
+  transform: scale(0.75);
+  justify-content: center;
+}
+
+
+.card-discover p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.card-discover a {
+  display: block;
+  width: 240px;
+  height: max-content;
+  text-align: center;
+  position: absolute;
+  left: 10px;
+}
+
+
+
 .plus-icon {
   position: absolute;
   bottom: 10px;
@@ -80,6 +145,83 @@ font.eot in /resources/css/fonts. */
   width: 100%;
   text-align: center;
 }
+
+.video {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  padding: 0px;
+  border: 5px solid #000000;
+  border-radius: 5px;
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: 0;
+  object-fit: contain;
+  position: relative;
+}
+
+.text-container {
+  flex: 0 0 auto;
+  padding: 50px;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  height: auto;
+  width: 100%;
+  margin-top: 25px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  background-color: #000000;
+}
+
+.big-text {
+  font-size: 4rem; 
+  font-family: Akkurat;
+  text-transform: uppercase;
+  color: #f94f39; 
+  max-width: 100%; 
+
+}
+.small-text {
+  font-size: 2rem; 
+  font-family: HafferTRIAL-Light;
+  text-align: center;
+  color: #ffffff;
+  max-width: 100%; 
+  margin-top: 20px; 
+}
+
+/*CSS for the Add game Modal of the website.*/
+
+.custom-modal-content {
+  background-color: #29253a;
+  color: #29253a;
+}
+
+.custom-modal-header, .custom-modal-title, .custom-form-label {
+  color: #ffffff;
+}
+
+.custom-modal-body {
+  display: flex;
+}
+
+.modal-image {
+  width: 50%;
+  max-width: 200px;
+  margin-right: 20px;
+}
+
+.modal-form {
+  width: 100%;
+}
+
+.custom-form-control {
+  background-color: #29253a;
+  color: #ffffff;
+}
+
+
 /*CSS style for header that makes it fixed as well as adds a black color to the menu bar
 Body adds a black background to the entire website. But it cant be changed to the body
 of just specific pages.*/
@@ -159,7 +301,7 @@ body {
   height: max-content;
   width: fit-content;
   position: relative;
-  right: 30px;
+  right: 25px;
 }
 
 .link2 {
@@ -279,17 +421,50 @@ body {
 }
 
 .card-screenshot {
-  flex: 0 0 auto;
   margin-right: 5px;
   padding: 1px;
   border: 0px solid #000000;
   border-radius: 5px;
   height: auto;
-  width: 75%;
-  overflow: hidden;
+  width: 100%;
+  overflow: visible;
   position: relative;
   display: inline-block;
 }
+
+
+.game-info-container {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 5px;
+  border: 0px solid #000000;
+  border-radius: 5px;
+  height: auto;
+  width: 98%;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  background-color: #29253a;
+}
+
+.score-container {
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+
+.progress-bar-container {
+  width: 100%;
+  width: 400px;
+  height: 0.3rem;
+  background-color: #f3f3f3;
+}
+
+.progress-bar-critic, .progress-bar-audience {
+  height: 0.3rem;
+  background-color: #f94f39;
+}
+
 
 /*CSS for the archives */
 
@@ -323,3 +498,52 @@ body {
   position: sticky;
   top: 0;
 }
+
+
+/* -webkit-text-size-adjust: 100%;
+color: #000;
+font-family: Haffer, sans-serif;
+font-size: 14px;
+line-height: 20px;
+-webkit-font-smoothing: antialiased;
+box-sizing: border-box;
+width: 100vw;
+max-width: 1400px;
+margin-left: auto;
+margin-right: auto;
+display: flex;
+
+-webkit-text-size-adjust: 100%;
+color: #000;
+font-family: Haffer, sans-serif;
+font-size: 14px;
+line-height: 20px;
+-webkit-font-smoothing: antialiased;
+box-sizing: border-box;
+grid-column-gap: 24px;
+justify-content: center;
+align-items: center;
+display: flex;
+height: 60vh;
+
+-webkit-text-size-adjust: 100%;
+color: #000;
+font-family: Haffer, sans-serif;
+font-size: 14px;
+line-height: 20px;
+-webkit-font-smoothing: antialiased;
+box-sizing: border-box;
+text-align: center;
+background-color: #1b1a27;
+background-position: 50%;
+background-size: cover;
+border-radius: 20px;
+justify-content: center;
+align-items: center;
+padding: 32px;
+display: flex;
+position: relative;
+box-shadow: 0 0 82px rgba(0, 0, 0, .15);
+height: 60vh;
+aspect-ratio: 213 / 380;
+background-image: url("https://global-uploads.webflow.com/6257582bafd6f37a531ba6fe/627c3b771666a1c8321fbe8c_bridge-image-03.jpg"); */

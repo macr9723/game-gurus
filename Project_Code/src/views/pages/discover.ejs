@@ -1,10 +1,13 @@
-<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/header') %> 
+<%- include ('../partials/menu') %>
+<%- include ('../partials/modal') %>
 
 <div class="container-fluid-1">
-  <h1 class="link2">Highest Rated Games</h1>
+  <h1 class="link2">Popular Games</h1>
   <div class="card-row">
-    <% highest_rated_games.forEach(event => { %> <% if (event.cover) { %>
-    <div class="card">
+    <% highest_rated_games.forEach(event => { %> 
+      <% if (event.cover) { %>
+    <div class="card-discover">
       <a
         href="/gamepage/<%= event.id %>"
         class="link2"
@@ -20,7 +23,55 @@
         data-bs-target="#AddGameModal"
       ></i>
     </div>
-    <% } %> <% }) %>
+    <% } %> 
+    <% }) %>
+  </div>
+</div>
+<div class="text-container">
+  <h2 class="big-text" style="text-align:center; color:#f94f39;">Bring Your Game World Together: Discover, Connect, and Play</h2>
+  <p class="small-text" style="text-align:center; color:#ffffff;">
+    Welcome to the ultimate gaming hub, where passionate players and fantastic games come together. 
+    Join us today and elevate your gameplay to new heights and Dive into a vast universe of diverse titles.
+  </p>
+  <div class="icon-buttons" style="display: flex; justify-content: center; ">
+    <a href="/register" class="h5" style="margin-right: 75px;">
+      <div style="display: inline-block; text-align: center;">
+        <i class="fa-solid fa-user-plus" style="font-size: 50px; color:#f94f39;"></i>
+        <p style="color: #f94f39; margin: 0;">Register</p>
+      </div>
+    </a>
+    <a href="/dashboard" class="h5" style="margin-right: 75px;">
+      <div style="display: inline-block; text-align: center;">
+        <i class="fa-solid fa-circle-user" style="font-size: 50px; color:#f94f39;"></i>
+        <p style="color: #f94f39; margin: 0;">Dashboard</p>
+      </div>
+    </a>
+    <a href="/archive" class="h5" style="margin-right: 75px;">
+      <div style="display: inline-block; text-align: center;">
+        <i class="fa-solid fa-gamepad" style="font-size: 50px; color:#f94f39;"></i>
+        <p style="color: #f94f39; margin: 0;">Archive</p>
+      </div>
+    </a>
+    <a href="/search" class="h5" style="margin-right: 0px;">
+      <div style="display: inline-block; text-align: center;">
+        <i class="fas fa-search" style="font-size: 50px; color:#f94f39;"></i>
+        <p style="color: #f94f39; margin: 0;">Search</p>
+      </div>
+    </a>
+  </div>
+</div>
+<div class="container-fluid-3">
+  <h1 class="link2">Popular Game Videos</h1>
+  <div class="card-row">
+    <% popular_game_videos.forEach(event => { %>
+      <% if (event.video_id) { %>
+      <div class="video">
+        <a href="/gamepage/<%= event.game %>" class="link2" aria-label="<%=event.name %>"><%=event.name %></a>
+        <% videoURL = 'https://www.youtube.com/embed/' + event.video_id %>
+        <iframe width="560" height="315" src="<%=videoURL %>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen alt="<%=event.name %>"></iframe>
+      </div>
+      <% } %>
+    <% }) %>
   </div>
 </div>
 <div class="container-fluid-2">
@@ -46,68 +97,5 @@
     <% } %> <% }) %>
   </div>
 </div>
-
-<%- include ('../partials/modal') %>
-
-<script>
-  // For using game images in modal
-  document.addEventListener("DOMContentLoaded", function () {
-    const plusIcons = document.querySelectorAll(".plus-icon");
-    const modalImage = document.getElementById("modalImage");
-
-    plusIcons.forEach((icon) => {
-      icon.addEventListener("click", function () {
-        const cardImage = icon.parentElement.querySelector("img");
-
-        modalImage.src = cardImage.src;
-        modalImage.alt = cardImage.alt;
-      });
-    });
-  });
-
-  function openModal(gameId, gameName) {
-    document.getElementById("gameId").value = gameId;
-    document.getElementById("gameName").value = gameName;
-  }
-</script>
-
-<!-- function openModal(gameId, gameName) { 
-  document.getElementById("gameId").value = gameId;
-  document.getElementById("gameName").value = gameName;
-}
-
-  function submitAddGameForm() {
-    const form = document.getElementById("addGameForm");
-    const formData = new FormData(form);
-    const requestBody = {};
-
-    for (const [key, value] of formData.entries()) {
-      requestBody[key] = value;
-    }
-
-  fetch("/add_game", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error submitting the form");
-      }
-    })
-    .then((data) => {
-      console.log("Form submitted successfully", data);
-      // Close the modal
-      const modalInstance = bootstrap.Modal.getInstance(document.getElementById("AddGameModal"));
-      modalInstance.hide();
-    })
-    .catch((error) => {
-      console.error("Error submitting the form:", error.message);
-    });
-}  -->
 
 <%- include ('../partials/footer') %>

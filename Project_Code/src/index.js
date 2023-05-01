@@ -75,11 +75,12 @@ app.use(express.static(path.join(__dirname, 'resources')));
 //REGISTER API
 
 app.get('/', (req, res) => {
-  res.render('pages/discover');
+  res.redirect('pages/discover');
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register', {});
+    const isLoggedIn = req.session.user !== undefined;
+    res.render('pages/register', {isLoggedIn});
 });
 
 // Welcome test case
@@ -138,7 +139,8 @@ app.post('/register', async (req, res) => {
 
 // Render Login
 app.get('/login', (req, res) => {
-	res.render("pages/login");
+  const isLoggedIn = req.session.user !== undefined;
+	res.render("pages/login", {isLoggedIn});
 });
 
 // Try/catch *** do we want to keep db of usernames?? ***
@@ -200,6 +202,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/discover', (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const highest_rated_games =  axios({
     url: "https://api.igdb.com/v4/games",
     method: 'POST',
@@ -208,10 +211,21 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
+    data: "fields id,name,cover.*, total_rating; sort total_rating desc; limit 25; where total_rating_count > 1000;"
 
   });
 
+  const popular_game_videos =  axios({
+    url: "https://api.igdb.com/v4/game_videos",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields game, name, video_id; limit 5; where game != null;"
+
+  });
 
   const newest_games = axios({
     url: "https://api.igdb.com/v4/games",
@@ -227,25 +241,30 @@ app.get('/discover', (req, res) => {
 
 
 
-  Promise.all([highest_rated_games, newest_games])
+  Promise.all([highest_rated_games, popular_game_videos ,newest_games])
     .then(results => {
       const highest_rated_games = results[0].data;
-      const newest_games = results[1].data;
+      const popular_game_videos = results[1].data;
+      const newest_games = results[2].data;
       res.render('pages/discover', {
         highest_rated_games,
+        popular_game_videos,
         newest_games,
+        isLoggedIn,
       });
     })
     .catch(error => {
       console.log(error);
       res.render('pages/discover', {
         highest_rated_games: [],
+        popular_game_videos: [],
         newest_games: [],
       });
     });
 });
 
 app.get("/search",(req,res)=>{
+  const isLoggedIn = req.session.user !== undefined;
   const search = req.query.search;
 
   axios({
@@ -259,7 +278,7 @@ app.get("/search",(req,res)=>{
     params: {
       search: search,
       limit: 25,
-      fields: "id,name,cover.*",
+      fields: "id,name,cover.*,rating;",
     },
     
 
@@ -268,6 +287,7 @@ app.get("/search",(req,res)=>{
       console.log(response.data);
       res.render('pages/search',{
         data: response.data,
+        isLoggedIn,
       })
   })
   .catch(err => {
@@ -277,9 +297,8 @@ app.get("/search",(req,res)=>{
 });
 
 app.get("/gamepage/:id",(req,res)=>{
-
   const game_id = req.params.id;
-
+  const isLoggedIn = req.session.user !== undefined;
   // Fetch game data from the IGDB API
   const gameData = axios({
     url: "https://api.igdb.com/v4/games",
@@ -289,7 +308,7 @@ app.get("/gamepage/:id",(req,res)=>{
       "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
       Authorization: `Bearer ${process.env.API_KEY}`,
     },
-    data: `fields name,artworks.*,cover.*,screenshots.*,summary,platforms.*,release_dates.*,similar_games.*,similar_games.cover.*,keywords.*; where id = ${game_id};`,
+    data: `fields name,artworks.*,cover.*,genres.*, screenshots.*,summary,platforms.*,release_dates.*,similar_games.*,similar_games.cover.*,keywords.*, themes.*, storyline, involved_companies.company.name, rating, aggregated_rating; where id = ${game_id};`,
   });
 
   // Fetch top three reviews from the database
@@ -308,6 +327,7 @@ app.get("/gamepage/:id",(req,res)=>{
       res.render("pages/gamepage", {
         data: gameResponse.data,
         reviews, // Pass the reviews data to the view
+        isLoggedIn,
       });
     })
     .catch((err) => {
@@ -367,12 +387,17 @@ const themeMapping = {
 };
 
 app.get("/archive", (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const genre = req.query.genre;
   const theme = req.query.theme;
 
-  const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
-  const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
-  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
+  const genreCondition = genreMapping[genre] ? `genres = ${genreMapping[genre]}` : "";
+  const themeCondition = themeMapping[theme] ? `themes = ${themeMapping[theme]}` : "";
+
+  const whereConditions = [genreCondition, themeCondition, "rating != 0"].filter(condition => condition !== "").join(" & ");
+
+  const requestData = `fields id,name,cover.*, rating; where ${whereConditions}; sort rating desc; limit 200;`;
+
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -388,6 +413,7 @@ app.get("/archive", (req, res) => {
       console.log(response.data);
       res.render("pages/archive", {
         data: response.data,
+        isLoggedIn,
       });
     })
     .catch((err) => {
@@ -510,66 +536,7 @@ app.get('/dashboard', async (req, res) => {
       });
     });
 });
-  // app.get('/dashboard', async (req, res) => {
-  //   const findUsergames = `SELECT * FROM entries INNER JOIN games
-  //   ON entries.game_id = games.game_id INNER JOIN reviews
-  //   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-  //   ON entries.entry_id = users_to_entries.entry_id
-  //   WHERE users_to_entries.username = $1;`;
-  
-  //   db.any(findUsergames, [req.session.user.username])
-  //   .then(async (games) => {
-  //     const gameDetails = await Promise.all(games.map(async (game) => {
-  //       const response = await axios({
-  //         url: "https://api.igdb.com/v4/games",
-  //         method: 'POST',
-  //         headers: {
-  //           'Accept': 'application/json',
-  //           'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-  //           'Authorization': `Bearer ${process.env.API_KEY}`,
-  //         },
-  //         data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
-  //       });
-  
-  //       return response.data[0];
-  //     }));
-  
-  //     res.render("pages/dashboard", {
-  //       games: gameDetails,
-  //       user
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     res.render("pages/dashboard", {
-  //       games: [],
-  //       error: true,
-  //       message: err.message,
-  //     });
-  //   });
-  // });
 
-// app.get('/dashboard', async (req, res) => {
-//   const findUsergames = `SELECT * FROM entries INNER JOIN games
-//   ON entries.game_id = games.game_id INNER JOIN reviews
-//   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-//   ON entries.entry_id = users_to_entries.entry_id
-//   WHERE users_to_entries.username = $1;`;
-
-//   db.any(findUsergames, [req.session.user.username])
-//   .then((games) => {
-//     console.log(games)
-//     res.render("pages/dashboard", {
-//       games,user
-//     });
-//   })
-//   .catch((err) => {
-//     res.render("pages/dashboard", {
-//       games: [],
-//       error: true,
-//       message: err.message,
-//     });
-//   });
-// });
 
 app.post('/add_game', async (req,res) => {
   if (req.session && req.session.user) {
@@ -594,79 +561,34 @@ app.post('/add_game', async (req,res) => {
   try {
     console.log("game_id:", game_id);
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
-    if(!gameFound){
+    if (!gameFound) {
       db.any(insertGame, [game_id, name])
-      .then(function (data) {
-        // res.status(201).json({
-        // status: 'success',
-        // data: data,
-        // });
-        res.redirect('/discover');
-      })
-      .catch(function (err) {
-        return console.log(err);
-      });
-
+        .then(
+          res.redirect('/discover')
+        )
+        .catch(function (err) {
+          return console.log(err);
+        });
     }
-
+  
     // If the game is already in our database we can update the rest of the tables accordingly
     const [newReview] = await db.any(insertReview, [review, rating])
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(function (data){
-        // res.status(201).json({
-        //   status: 'success',
-        //   data: data,
-        // });
-        res.redirect('/discover');
-      })
+      .then(
+        res.redirect('discover')
+      )
       .catch(function (err) {
         return console.log(err);
       })
   } catch (error) {
     // res.render('/discover', { message: error.message });
     res.redirect('/discover');
-
   }
   } else {
     res.render('pages/login', { message: 'Please login to add a game' });
   }
 });
-
-// app.get("/archive", (req, res) => {
-//   const search = req.query.search;
-//   const genres = req.query["genre[]"] || [];
-
-//   console.log("Genres from query:", genres);
-
-//   const genreIds = genres
-//     .map((genre) => genreMapping[genre])
-//     .filter((id) => id !== undefined)
-//     .join(",");
-
-//     const genreFilter = genreIds ? `where any(genres) = (${genreIds});` : "";
-//     const requestData = `fields id,name,cover.*; ${genreFilter} sort name asc;limit 5;`;
-
-//   axios({
-//     url: "https://api.igdb.com/v4/games",
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
-//       Authorization: `Bearer ${process.env.API_KEY}`,
-//     },
-//     data: requestData,
-//   })
-//     .then((response) => {
-//       console.log(response.data);
-//       res.render("pages/archive", {
-//         data: response.data,
-//       });
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// });
 
 //Logout
 app.get('/logout', (req, res) => {

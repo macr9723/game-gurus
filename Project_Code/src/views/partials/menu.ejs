@@ -34,45 +34,14 @@
     <!-- Right elements with the login, signup and logout-->
     <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <!--<a class="link2" href="/login">Sign In</a>
-        <a class="link2" href="/register">Sign Up</a> -->
-        <a class="link2" href="/logout">Logout</a>
+        <% if (!isLoggedIn) { %>
+          <a class="link2" href="/discover">Browse</a>
+          <a class="link2" href="/login">Login</a>
+          <a class="link2" href="/register">Sign Up</a>
+        <% } else { %>
+          <a class="link2" href="/logout">Logout</a>
+        <% } %>
       </li>
     </ul>
   </nav>
-
-  <!-- Left original code in there incase we change back to the old navbar -->
-  <!-- <div class="container-fluid">
-      <a class="navbar-brand" href="/discover">VGList</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <form action="/search" method="GET" role="search">
-        <input class="form-control" type="search" placeholder="Search" name="search" id="search" aria-label="Search">
-      </form>
-      <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Browse</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Library</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Profile</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav me-1">
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Sign In</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Sign Up</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </div> -->
 </header>
