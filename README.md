@@ -7,12 +7,27 @@
 * Anthony Weigand | Email: anwe1890@colorado.edu github: tweigand1994
 
 ## Application Description: 
-	Game Gurus is an videogame based forum that allows users to view and create ratings, reviews, and collections of video games. It allows for users to stay connected to what’s going on with all things video game related. It also provides a space for users to list their own accomplishments across various games (hours logged, rare items, rare achievements, etc). 
-	Users will be able to log into their own unique account, view a personal profile page which displays their contributions to the forum. A Search page will also be included which allows the user to browse video game catalogs with filter capabilities to sort results based on genres the user inputs. 
-	Additionally, a private admin page will allow specific users to edit and remove posts that are deemed to be inappropriate/offensive. 
+	Game Gurus is a video game forum that keeps users in the loop on all things video game related. The user logs into their personal account and is taken to the home page, which acts as a collection space where the most popular as well as newest games are displayed. There are also preview videos of gameplay from selected games that are popular. Every game in our database has its own gamepage which provides more information about the game such as, game description, key descriptors, top reviews, and even screenshots of active gameplay. 
+	Not seeing what you’re looking for? Users are able to use the search bar to browse their favorite games and are also able to post their personal ratings and reviews to respective gamepages. By posting a review and rating, the user adds the game to their personal dashboard where they can access all the games they have previously interacted with. A separate page labeled ‘archive’ hosts a larger volume of video games organized by genre where the user can explore games they might be interested in. By selecting a different ‘genre’ and/or ‘theme’ buttons, different video games will be displayed to the user based on their selections.
+
+## Tech Stack: 
+VCS - GitHub
+Project Tracking - GitHub Project Board
+Database - PostgreSQL
+IDE - VSCode
+UI Tool - EJS
+Application Server - NodeJS
+Deployment - Azure
+Methodology - Agile
+External API - IGDB
+Wireframing - LucidChart
+
+## How to run the tests
+- Link to Test Branch
+https://github.com/macr9723/game-gurus/tree/Test
 
 ### Link to Deliverable
 - [Here](https://docs.google.com/document/d/1yH0WpI1xJerLbbXM1trn9cCRhVGhJZvdjHoIMOE_Lx8/edit?usp=sharing)
 
-### Link to Test Branch
-- https://github.com/macr9723/game-gurus/tree/Test
+## Deployment Link
+- http://recitation-11-team-05.eastus.cloudapp.azure.com:3000
