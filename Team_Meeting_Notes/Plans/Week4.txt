@@ -1,1 +1,17 @@
+What have we done since last week?
+- completed the gamepage front end
+- completed the review function for our website
+- completed dashboard front end and backend
+- made slight changes/completed archive
+- tested the website for any bugs or issues
 
+What do we plan to do next week?
+- Make any changes to our PDF or slides that Nikita suggests
+- practice demoing our website before we present
+- turn in peer evaluations
+
+What challenges are we facing?
+- format for some things on the PDF
+- were not sure exactly what information to input
+- what our submission deadlines are
+- when to keep the website running for grading
