@@ -94,6 +94,7 @@ app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
   const username = req.body.username;
   const hash = await bcrypt.hash(req.body.password, 10);
+  const isLoggedIn = req.session.user !== undefined;
 
   //Catch if a user exists in the table already
   const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
@@ -128,7 +129,8 @@ app.post('/register', async (req, res) => {
     //});
     res.render('pages/register', {
       error: true,
-      message: 'Username already exists'
+      message: 'Username already exists',
+      isLoggedIn
     });
     return;
   }
@@ -148,6 +150,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
+  const isLoggedIn = req.session.user !== undefined;
 
 	try {
 		// Find user by username
@@ -158,6 +161,7 @@ app.post('/login', async (req, res) => {
 			res.render('pages/register', {
         error: true,
         message: 'User Not Found',
+        isLoggedIn
       });
 		}
     
@@ -175,6 +179,7 @@ app.post('/login', async (req, res) => {
 			res.render('pages/login', {
         error: true,
         message: 'Incorrect Username or Password',
+        isLoggedIn
      });
 
 		}
@@ -197,7 +202,7 @@ app.post('/login', async (req, res) => {
 
 	} catch (error) {
 		// Handle error and render login page with error message
-		res.render('pages/login', { message: error.message });
+		res.render('pages/login', { message: error.message, isLoggedIn });
 	}
 });
 
