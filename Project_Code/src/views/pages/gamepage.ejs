@@ -29,7 +29,7 @@
         let coverURL = data[0].cover.url;
         let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
         %>
-        <img src="<%= coverURLBig %>">
+        <img src="<%= coverURLBig %>"/>
         <i class="fas fa-plus plus-icon" onclick= "openModal('<%= data[0].id %>', '<%= data[0].name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
       </div>
       <div class="d-flex flex-column mb-3">
