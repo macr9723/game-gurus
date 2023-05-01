@@ -75,11 +75,12 @@ app.use(express.static(path.join(__dirname, 'resources')));
 //REGISTER API
 
 app.get('/', (req, res) => {
-  res.render('pages/login');
+  res.redirect('pages/discover');
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register', {});
+    const isLoggedIn = req.session.user !== undefined;
+    res.render('pages/register', {isLoggedIn});
 });
 
 // Welcome test case
@@ -93,6 +94,7 @@ app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
   const username = req.body.username;
   const hash = await bcrypt.hash(req.body.password, 10);
+  const isLoggedIn = req.session.user !== undefined;
 
   //Catch if a user exists in the table already
   const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
@@ -127,7 +129,8 @@ app.post('/register', async (req, res) => {
     //});
     res.render('pages/register', {
       error: true,
-      message: 'Username already exists'
+      message: 'Username already exists',
+      isLoggedIn
     });
     return;
   }
@@ -138,7 +141,8 @@ app.post('/register', async (req, res) => {
 
 // Render Login
 app.get('/login', (req, res) => {
-	res.render("pages/login");
+  const isLoggedIn = req.session.user !== undefined;
+	res.render("pages/login", {isLoggedIn});
 });
 
 // Try/catch *** do we want to keep db of usernames?? ***
@@ -146,6 +150,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
+  const isLoggedIn = req.session.user !== undefined;
 
 	try {
 		// Find user by username
@@ -156,6 +161,7 @@ app.post('/login', async (req, res) => {
 			res.render('pages/register', {
         error: true,
         message: 'User Not Found',
+        isLoggedIn
       });
 		}
     
@@ -173,6 +179,7 @@ app.post('/login', async (req, res) => {
 			res.render('pages/login', {
         error: true,
         message: 'Incorrect Username or Password',
+        isLoggedIn
      });
 
 		}
@@ -195,25 +202,12 @@ app.post('/login', async (req, res) => {
 
 	} catch (error) {
 		// Handle error and render login page with error message
-		res.render('pages/login', { message: error.message });
+		res.render('pages/login', { message: error.message, isLoggedIn });
 	}
 });
 
-
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
-
-
 app.get('/discover', (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const highest_rated_games =  axios({
     url: "https://api.igdb.com/v4/games",
     method: 'POST',
@@ -222,10 +216,21 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name,cover.*; sort total_rating desc; limit 25; where total_rating_count > 1000;"
+    data: "fields id,name,cover.*, total_rating; sort total_rating desc; limit 25; where total_rating_count > 1000;"
 
   });
 
+  const popular_game_videos =  axios({
+    url: "https://api.igdb.com/v4/game_videos",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields game, name, video_id; where game != null & game.total_rating != 0; sort game.release_dates asc; limit 10;"
+
+  });
 
   const newest_games = axios({
     url: "https://api.igdb.com/v4/games",
@@ -235,31 +240,65 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 25;"
+    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 100;"
+
+  });
+
+  const top_console_games = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields id,name, cover.*, release_dates.date, hypes, platforms, total_rating; where platforms = (48,49,167,169) & rating != 0 & aggregated_rating != 0 & total_rating_count > 100; sort total_rating desc; limit 25;"
+
+  });
+
+  const top_pc_games = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields id,name, cover.*, release_dates.date, hypes, platforms, total_rating; where platforms = 6 & rating != 0 & aggregated_rating != 0 & total_rating_count > 100; sort total_rating desc; limit 25;"
 
   });
 
 
-
-  Promise.all([highest_rated_games, newest_games])
+  Promise.all([highest_rated_games, popular_game_videos ,newest_games, top_console_games, top_pc_games])
     .then(results => {
       const highest_rated_games = results[0].data;
-      const newest_games = results[1].data;
+      const popular_game_videos = results[1].data;
+      const newest_games = results[2].data;
+      const top_console_games = results[3].data;
+      const top_pc_games = results[4].data;
       res.render('pages/discover', {
         highest_rated_games,
+        popular_game_videos,
         newest_games,
+        top_console_games,
+        top_pc_games,
+        isLoggedIn,
       });
     })
     .catch(error => {
       console.log(error);
       res.render('pages/discover', {
         highest_rated_games: [],
+        popular_game_videos: [],
         newest_games: [],
+        top_console_games: [],
+        top_pc_games: [],
       });
     });
 });
 
 app.get("/search",(req,res)=>{
+  const isLoggedIn = req.session.user !== undefined;
   const search = req.query.search;
 
   axios({
@@ -273,7 +312,7 @@ app.get("/search",(req,res)=>{
     params: {
       search: search,
       limit: 25,
-      fields: "id,name,cover.*",
+      fields: "id,name,cover.*,rating;",
     },
     
 
@@ -282,6 +321,7 @@ app.get("/search",(req,res)=>{
       console.log(response.data);
       res.render('pages/search',{
         data: response.data,
+        isLoggedIn,
       })
   })
   .catch(err => {
@@ -290,205 +330,44 @@ app.get("/search",(req,res)=>{
 
 });
 
+app.get("/gamepage/:id",(req,res)=>{
+  const game_id = req.params.id;
+  const isLoggedIn = req.session.user !== undefined;
+  // Fetch game data from the IGDB API
+  const gameData = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
+      Authorization: `Bearer ${process.env.API_KEY}`,
+    },
+    data: `fields name,artworks.*,cover.*,genres.*, screenshots.*,summary,platforms.*,release_dates.*,similar_games.*,similar_games.cover.*,keywords.*, themes.*, storyline, involved_companies.company.name, rating, aggregated_rating; where id = ${game_id};`,
+  });
 
-app.get("/gamepage/:id", async (req, res) => {
-    const game_id = req.params.id;
-  
-    // Fetch game data from the IGDB API
-    const gameData = axios({
-      url: "https://api.igdb.com/v4/games",
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-      data: `fields name,artworks.*,cover.*,screenshots.*,summary,platforms.*,release_dates.*,similar_games.*,similar_games.cover.*,keywords.*; where id = ${game_id};`,
-    });
-  
-    // Fetch top three reviews from the database
-    const findReviews = 
-    `SELECT DISTINCT users_to_entries.username, reviews.review, reviews.rating 
-    FROM users_to_entries 
-    JOIN entries ON users_to_entries.entry_id = entries.entry_id 
-    JOIN reviews ON reviews.review_id = entries.review_id 
-    WHERE entries.game_id = $1 ORDER BY reviews.rating DESC LIMIT 3;`;
-    
-    const reviewsData = db.any(findReviews, [game_id]);
-  
-    // Wait for both game data and reviews data to be fetched
-    Promise.all([gameData, reviewsData])
-      .then(([gameResponse, reviews]) => {
-        res.render("pages/gamepage", {
-          data: gameResponse.data,
-          reviews, // Pass the reviews data to the view
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("An error occurred while fetching the game data and reviews.");
-      });
-});
+  // Fetch top three reviews from the database
+  const findReviews = 
+  `SELECT DISTINCT users_to_entries.username, reviews.review, reviews.rating 
+  FROM users_to_entries 
+  JOIN entries ON users_to_entries.entry_id = entries.entry_id 
+  JOIN reviews ON reviews.review_id = entries.review_id 
+  WHERE entries.game_id = $1 ORDER BY reviews.rating DESC LIMIT 3;`;
 
-  app.get('/dashboard', async (req, res) => {
-    const findUsergames = `SELECT * FROM entries INNER JOIN games
-    ON entries.game_id = games.game_id INNER JOIN reviews
-    ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-    ON entries.entry_id = users_to_entries.entry_id
-    WHERE users_to_entries.username = $1;`;
-  
-    db.any(findUsergames, [req.session.user.username])
-    .then(async (games) => {
-      const uniqueGamesMap = new Map();
-  
-      games.forEach(game => {
-        if (!uniqueGamesMap.has(game.game_id)) {
-          uniqueGamesMap.set(game.game_id, game);
-        }
-      });
-  
-      const uniqueGames = Array.from(uniqueGamesMap.values());
-  
-      const gameDetails = await Promise.all(uniqueGames.map(async (game) => {
-        const response = await axios({
-          url: "https://api.igdb.com/v4/games",
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-            'Authorization': `Bearer ${process.env.API_KEY}`,
-          },
-          data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
-        });
-  
-        return response.data[0];
-      }));
-  
-      res.render("pages/dashboard", {
-        games: gameDetails,
-        user
+  const reviewsData = db.any(findReviews, [game_id]);
+
+  // Wait for both game data and reviews data to be fetched
+  Promise.all([gameData, reviewsData])
+    .then(([gameResponse, reviews]) => {
+      res.render("pages/gamepage", {
+        data: gameResponse.data,
+        reviews, // Pass the reviews data to the view
+        isLoggedIn,
       });
     })
     .catch((err) => {
-      res.render("pages/dashboard", {
-        games: [],
-        error: true,
-        message: err.message,
-      });
+      console.error(err);
+      res.status(500).send("An error occurred while fetching the game data and reviews.");
     });
-  });
-  // app.get('/dashboard', async (req, res) => {
-  //   const findUsergames = `SELECT * FROM entries INNER JOIN games
-  //   ON entries.game_id = games.game_id INNER JOIN reviews
-  //   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-  //   ON entries.entry_id = users_to_entries.entry_id
-  //   WHERE users_to_entries.username = $1;`;
-  
-  //   db.any(findUsergames, [req.session.user.username])
-  //   .then(async (games) => {
-  //     const gameDetails = await Promise.all(games.map(async (game) => {
-  //       const response = await axios({
-  //         url: "https://api.igdb.com/v4/games",
-  //         method: 'POST',
-  //         headers: {
-  //           'Accept': 'application/json',
-  //           'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
-  //           'Authorization': `Bearer ${process.env.API_KEY}`,
-  //         },
-  //         data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
-  //       });
-  
-  //       return response.data[0];
-  //     }));
-  
-  //     res.render("pages/dashboard", {
-  //       games: gameDetails,
-  //       user
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     res.render("pages/dashboard", {
-  //       games: [],
-  //       error: true,
-  //       message: err.message,
-  //     });
-  //   });
-  // });
-
-// app.get('/dashboard', async (req, res) => {
-//   const findUsergames = `SELECT * FROM entries INNER JOIN games
-//   ON entries.game_id = games.game_id INNER JOIN reviews
-//   ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
-//   ON entries.entry_id = users_to_entries.entry_id
-//   WHERE users_to_entries.username = $1;`;
-
-//   db.any(findUsergames, [req.session.user.username])
-//   .then((games) => {
-//     console.log(games)
-//     res.render("pages/dashboard", {
-//       games,user
-//     });
-//   })
-//   .catch((err) => {
-//     res.render("pages/dashboard", {
-//       games: [],
-//       error: true,
-//       message: err.message,
-//     });
-//   });
-// });
-
-
-app.post('/add_game', async (req,res) => {
-  if (req.session && req.session.user) {
-  // db queries
-  const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';
-  const insertReview = 'insert into reviews (review, rating) values ($1, $2) returning * ;';
-  const insertEntry = 'insert into entries (game_id, review_id) values ($1, $2) returning * ;';
-  const insertUsers_to_Entries = 'insert into users_to_entries (username, entry_id) values ($1, $2) returning * ;';
-
-  // trying to get review count -- TONY
-  const insertReviewCount = 'insert into entries (game_id) values ($1) returning COUNT(review_id);';
-
-  // getting params
-  const game_id = req.body.gameId;
-  const name = req.body.gameName;
-  const rating = req.body.rating;
-  const review = req.body.review;
-  const reviewCount = req.body.insertReviewCount; // TONY
-  const ratingCount = req.body.ratingCount;
-  
-  // Before updating games table check if a game already exists in the database
-  try {
-    console.log("game_id:", game_id);
-    const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
-    if (!gameFound) {
-      db.any(insertGame, [game_id, name])
-        .then(
-          res.redirect('/discover')
-        )
-        .catch(function (err) {
-          return console.log(err);
-        });
-    }
-  
-    // If the game is already in our database we can update the rest of the tables accordingly
-    const [newReview] = await db.any(insertReview, [review, rating])
-    const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
-    db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
-      .then(
-        res.redirect('discover')
-      )
-      .catch(function (err) {
-        return console.log(err);
-      })
-  } catch (error) {
-    // res.render('/discover', { message: error.message });
-    res.redirect('/discover');
-  }
-  } else {
-    res.render('pages/login', { message: 'Please login to add a game' });
-  }
 });
 
 const genreMapping = {
@@ -541,50 +420,18 @@ const themeMapping = {
   "Romance": 44
 };
 
-
-
-// app.get("/archive", (req, res) => {
-//   const search = req.query.search;
-//   const genres = req.query["genre[]"] || [];
-
-//   console.log("Genres from query:", genres);
-
-//   const genreIds = genres
-//     .map((genre) => genreMapping[genre])
-//     .filter((id) => id !== undefined)
-//     .join(",");
-
-//     const genreFilter = genreIds ? `where any(genres) = (${genreIds});` : "";
-//     const requestData = `fields id,name,cover.*; ${genreFilter} sort name asc;limit 5;`;
-
-//   axios({
-//     url: "https://api.igdb.com/v4/games",
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Client-ID": "3wjgq5511om2hr753zb9vz2uvhxoae",
-//       Authorization: `Bearer ${process.env.API_KEY}`,
-//     },
-//     data: requestData,
-//   })
-//     .then((response) => {
-//       console.log(response.data);
-//       res.render("pages/archive", {
-//         data: response.data,
-//       });
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// });
-
 app.get("/archive", (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
   const genre = req.query.genre;
   const theme = req.query.theme;
 
-  const genreId = genreMapping[genre] ? `where genres = ${genreMapping[genre]};` : "";
-  const themeId = themeMapping[theme] ? `where themes = ${themeMapping[theme]};` : "";
-  const requestData = `fields id,name,cover.*, rating; ${genreId ? genreId : themeId} sort name asc; limit 25;`;
+  const genreCondition = genreMapping[genre] ? `genres = ${genreMapping[genre]}` : "";
+  const themeCondition = themeMapping[theme] ? `themes = ${themeMapping[theme]}` : "";
+
+  const whereConditions = [genreCondition, themeCondition, "rating != 0"].filter(condition => condition !== "").join(" & ");
+
+  const requestData = `fields id,name,cover.*, rating; where ${whereConditions}; sort rating desc; limit 200;`;
+
 
   axios({
     url: "https://api.igdb.com/v4/games",
@@ -600,6 +447,7 @@ app.get("/archive", (req, res) => {
       console.log(response.data);
       res.render("pages/archive", {
         data: response.data,
+        isLoggedIn,
       });
     })
     .catch((err) => {
@@ -607,12 +455,184 @@ app.get("/archive", (req, res) => {
     });
 });
 
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
 
+// Authentication Required
+app.use(auth);
+
+app.get('/userLibrary/:username', async (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
+  const findUsergames = `SELECT * FROM entries INNER JOIN games
+  ON entries.game_id = games.game_id INNER JOIN reviews
+  ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
+  ON entries.entry_id = users_to_entries.entry_id
+  WHERE users_to_entries.username = $1
+  ORDER BY entries.entry_id DESC;`;
+
+  db.any(findUsergames, [req.params.username])
+    .then(async (games) => {
+      const uniqueGamesMap = new Map();
+  
+      games.forEach(game => {
+        if (!uniqueGamesMap.has(game.game_id)) {
+          uniqueGamesMap.set(game.game_id, game);
+        }
+      });
+  
+      const uniqueGames = Array.from(uniqueGamesMap.values());
+  
+      const gameDetails = await Promise.all(uniqueGames.map(async (game) => {
+        const response = await axios({
+          url: "https://api.igdb.com/v4/games",
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+            'Authorization': `Bearer ${process.env.API_KEY}`,
+          },
+          data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
+        });
+        
+        const gameData = response.data[0];
+        gameData.review = game.review;
+        gameData.rating = game.rating;
+        return response.data[0];
+      }));
+  
+      res.render("pages/userLibrary", {
+        games: gameDetails,
+        username: req.params.username,
+        isLoggedIn 
+      });
+    })
+    .catch((err) => {
+      res.render("pages/userLibrary", {
+        games: [],
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+app.get('/dashboard', async (req, res) => {
+  const isLoggedIn = req.session.user !== undefined;
+  const findUsergames = `SELECT * FROM entries INNER JOIN games
+  ON entries.game_id = games.game_id INNER JOIN reviews
+  ON entries.review_id = reviews.review_id INNER JOIN users_to_entries
+  ON entries.entry_id = users_to_entries.entry_id
+  WHERE users_to_entries.username = $1
+  ORDER BY entries.entry_id DESC;`;
+  
+  db.any(findUsergames, [req.session.user.username])
+    .then(async (games) => {
+      const uniqueGamesMap = new Map();
+  
+      games.forEach(game => {
+        if (!uniqueGamesMap.has(game.game_id)) {
+          uniqueGamesMap.set(game.game_id, game);
+        }
+      });
+  
+      const uniqueGames = Array.from(uniqueGamesMap.values());
+  
+      const gameDetails = await Promise.all(uniqueGames.map(async (game) => {
+        const response = await axios({
+          url: "https://api.igdb.com/v4/games",
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+            'Authorization': `Bearer ${process.env.API_KEY}`,
+          },
+          data: `fields name,cover.*,platforms.*; where id = ${game.game_id};`
+        });
+        
+        const gameData = response.data[0];
+        gameData.review = game.review;
+        gameData.rating = game.rating;
+        return response.data[0];
+      }));
+  
+      res.render("pages/dashboard", {
+        games: gameDetails,
+        user,
+        isLoggedIn
+      });
+    })
+    .catch((err) => {
+      res.render("pages/dashboard", {
+        games: [],
+        error: true,
+        message: err.message,
+      });
+    });
+});
+
+
+app.post('/add_game', async (req,res) => {
+  const isLoggedIn = req.session.user !== undefined;
+  if (req.session && req.session.user) {
+  // db queries
+  const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';
+  const insertReview = 'insert into reviews (review, rating) values ($1, $2) returning * ;';
+  const insertEntry = 'insert into entries (game_id, review_id) values ($1, $2) returning * ;';
+  const insertUsers_to_Entries = 'insert into users_to_entries (username, entry_id) values ($1, $2) returning * ;';
+
+  // trying to get review count -- TONY
+  const insertReviewCount = 'insert into entries (game_id) values ($1) returning COUNT(review_id);';
+
+  // getting params
+  const game_id = req.body.gameId;
+  const name = req.body.gameName;
+  const rating = req.body.rating;
+  const review = req.body.review;
+  const reviewCount = req.body.insertReviewCount; // TONY
+  const ratingCount = req.body.ratingCount;
+  
+  // Before updating games table check if a game already exists in the database
+  try {
+    console.log("game_id:", game_id);
+    const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
+    if (!gameFound) {
+      db.any(insertGame, [game_id, name])
+        .then(function (data){
+          res.redirect('/discover');
+        })
+        .catch(function (err) {
+          return console.log(err);
+        });
+    }
+  
+    // If the game is already in our database we can update the rest of the tables accordingly
+    const [newReview] = await db.any(insertReview, [review, rating])
+    const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
+    db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
+      .then(function (data){
+        res.redirect('discover');
+      })
+      .catch(function (err) {
+        return console.log(err);
+      })
+  } catch (error) {
+    // res.render('/discover', { message: error.message });
+    res.redirect('/discover');
+  }
+  } else {
+    res.render('pages/login', { message: 'Please login to add a game' });
+  }
+});
 
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render("pages/login");
+  res.redirect("/discover");
 });
 
 

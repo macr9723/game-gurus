@@ -1,5 +1,6 @@
 <%- include ('../partials/header') %> 
 <%- include ('../partials/menu') %>
+<%- include ('../partials/game-modal') %>
 
 
 <div class="container-fluid">
@@ -20,49 +21,77 @@
     <% } %>
     <% } %>
   </div>
+</div>
   <div class="page-container">
-  <div class="content-container">
-    <div class="card">
-      <% 
-      let coverURL = data[0].cover.url;
-      let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
-      %>
-      <img src="<%= coverURLBig %>">
-    </div>
-    <div class="d-flex flex-column mb-3">
-      <div class="d-flex flex-row align-items-baseline justify-content-around mb-3">
+    <div class="content-container">
+      <div class="card">
+        <% 
+        let coverURL = data[0].cover.url;
+        let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
+        %>
+        <img src="<%= coverURLBig %>"/>
+        <i class="fas fa-plus plus-icon" onclick= "openModal('<%= data[0].id %>', '<%= data[0].name %>')" data-bs-toggle="modal" data-bs-target="#AddGameModal"></i>
+      </div>
+      <div class="d-flex flex-column mb-3">
+        <div class="d-flex flex-row align-items-baseline justify-content-around mb-3">
           <div class="h1" style="font-family: HafferTrial-SemiBold; color: white;" ><%=data[0].name %></div>
+          <% if(data[0].release_dates[0].human) { %>
           <div class="ms-auto h5" style="font-family: HafferTrial-Light; color: white;" > Release Date - <%=data[0].release_dates[0].human %></div>
-        </div>
-      <!-- <div class="d-flex flex-wrap mb-3">
-          <% for(let i = 0; i < data[0].platforms.length; i++) { %>
-            <% if(data[0].platforms.platform_logo) { %> 
-              <% 
-              let platformLogoURL = data[0].platforms[i].platform_logo.url;
-              %>
-              <img src="<%=platformLogoURL %>" alt = "<%= data[0].platforms[i].name%>">
-              <% } %>
           <% } %>
-        </div> -->
-
-      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
-      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].keywords[0].name %>, <%=data[0].keywords[1].name %>, <%=data[0].keywords[2].name %></div>
-      <div id="reviews-container" class="container-fluid">
-        <h1 class="link2">Top Reviews</h1>
-          <% reviews.forEach(review => { %>
-            <div class="review">
-              <h3 style="font-family: HafferTrial-Light; color: white;"><%= review.username %> - <%= review.rating %></h3>
-              <p style="font-family: HafferTrial-Light; color: white;"><%= review.review %></p>
-            </div>
-          <% }) %>
         </div>
+        <div class="d-flex flex-row">
+          <% if (data[0].keywords) { %>
+            <% for (let i = 0; i < data[0].keywords.length && i < 3; i++) { %>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" style ="background-color: #29253a; font-family: HafferTrial-Light; color: white; "><%=data[0].keywords[i].name %></button>
+            </div>
+            <% } %>
+          <% } %>
+        </div>
+        <br>
+        <div class="game-info-container">
+        <div class="d-flex flex-wrap mb-3">
+          <h5 style="font-family: Akkurat; color: #f94f39;">Platforms - </h5>
+        <% for(let i = 0; i < data[0].platforms.length; i++) { %>
+          <div class="h5  mx-2" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].platforms[i].name %></div>
+        <% } %>
+          <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
+          <div class="score-container">
+            <div class="score-critics">
+                <h5 style="font-family: Akkurat; color: #f94f39;">Critic Score</h5>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-critic" style="width: <%= data[0].aggregated_rating ? data[0].aggregated_rating : 0 %>%;"></div>
+                </div>
+            </div>
+            <br>
+            <div class="score-audience">
+                <h5 style="font-family: Akkurat; color: #f94f39;">Audience Score</h5>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-audience" style="width: <%= data[0].rating ? data[0].rating : 0 %>%;"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="game-info-container">
+    <div id="reviews-container" class="container-fluid">
+      <div class="h3" style="font-family: Akkurat; color: #f94f39; text-transform: uppercase;">Top Reviews</div>
+        <% reviews.forEach(review => { %>
+          <div class="review">
+            <a class="h4" href="/userLibrary/<%= review.username %>" style="font-family: HafferTrial-Light; color: #f94f39;"><%= review.username %></a>
+              <div class="p" style="font-family: Akkurat; color: #f94f39;">Game Rating - <span style="font-family: HafferTrial-Light; color: white;"><%= review.rating %></span></div>
+              <div class="p" style="font-family: Akkurat; color: #f94f39;">Review </div><p style="font-family: HafferTrial-Light; color: white;"><%= review.review %></p>
+          </div>
+        <% }) %>
     </div>
   </div>
   </div>
 </div>
+</div>
   <div class="container-fluid-3">
       <h1 class="link2">Game Screenshots</h1>
-      <!-- <div class="card-row"> -->
+      <div class="card-row">
         <% if(data[0].screenshots) { %>
         <% for(let i = 0; i < data[0].screenshots.length; i++) { %>
           <div class="card-screenshot">
@@ -76,6 +105,38 @@
         <% } %>
       </div>
   </div>
+  <div class="game-info-container">
+    <div class="d-flex flex-wrap flex-column mb-3">
+      <div class="d-flex">
+      <div class="h5" style="font-family: Akkurat; color: #f94f39;">Genres - </div>
+      <% if(data[0].genres) { %>
+      <% for(let i = 0; i < data[0].genres.length; i++) { %>
+        <div class="h5 mx-2" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].genres[i].name %></div>
+      <% } %>
+      <% } %>
+    </div>
+    <div class="d-flex"> 
+      <div class="h5" style="font-family: Akkurat; color: #f94f39;">Themes - </div>
+      <% if(data[0].themes) { %>
+      <% for(let i = 0; i < data[0].themes.length; i++) { %>
+      <div class="h5 mx-2" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].themes[i].name %></div>
+      <% } %>
+      <% } %>
+      <br>
+    </div>
+    <div class="d-flex"> 
+      <div class="h5" style="font-family: Akkurat; color: #f94f39;">Publishers/Developers - </div>
+      <% if(data[0].involved_companies) { %>
+      <% for(let i = 0; i < data[0].involved_companies.length; i++) { %>
+          <div class="h5 mx-2" style="font-family: HafferTrial-Light; color: white;"><%=data[0].involved_companies[i].company.name %></div>
+      <% } %>
+      <% } %>
+    </div>
+      <div class="h5" style="font-family: Akkurat; color: #f94f39;">Storyline</div>
+      <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].storyline %></div>
+</div>
+</div>
+<br>
 <div class="container-fluid-4">
   <h1 class="link2">Similar Games</h1>
   <div class="card-row">

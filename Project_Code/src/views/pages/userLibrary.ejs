@@ -1,0 +1,36 @@
+<%- include ('../partials/header') %> 
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container-fluid-dashboard">
+      <h1 style="font-family: HafferTrial-Light; color: white"><%- username %>'s Library</h1>
+      <div class="grid-container">
+        <% games.forEach((game, index) => { %>
+          <% if (game.cover) { %>
+            <div class="d-flex p-2">
+              <div class="card">
+                <a href="/gamepage/<%= game.id %>" class="link2" aria-label="<%= game.name %>">
+                  <%= game.name %>
+                  <% 
+                  let coverURL = game.cover.url;
+                  let coverURLBig = coverURL.replace('t_thumb', 't_cover_big_2x');
+                  %>
+                  <img src="<%= coverURLBig %>" alt="<%= game.name %>" />
+                </a>
+              </div>
+              <div class="review-container" id="review-container-<%= index %>">
+                <h4 style="font-family: HafferTrial-Light; color: white;">Rating:</h4>
+                <p style="font-family: HafferTrial-Light; color: white"><%= game.rating %></p>
+                <h4 style="font-family: HafferTrial-Light; color: white;">Review:</h4>
+                <p style="font-family: HafferTrial-Light; color: white"><%= game.review %></p>
+                
+              </div>
+            </div>
+          <% } %>
+        <% }) %>
+      </div>
+    </div>
+</div>
+</main>
+
+<%- include ('../partials/footer') %>

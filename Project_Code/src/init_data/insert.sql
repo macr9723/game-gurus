@@ -1,7 +1,7 @@
 -- The following inserts are for testing purposes
 
 INSERT INTO users (username, password) VALUES ('ash_k', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO'); 
-INSERT INTO users (username, password) VALUES ('jared', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO'); 
+INSERT INTO users (username, password) VALUES ('jared', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO');
 
 INSERT INTO games (game_id, name) VALUES (119277, 'Genshin Impact');
 INSERT INTO games (game_id, name) VALUES (138162, 'Umineko no Naku Koro ni Chiru: Shinjitsu to Gensou no Nocturne');
@@ -12,9 +12,9 @@ INSERT INTO games (game_id, name) VALUES (26450, 'IllBleed');
 INSERT INTO games (game_id, name) VALUES (6844, 'LEGO Star Wars III: The Clone Wars');
 
 INSERT INTO reviews (review, rating) VALUES ('ayaka is pretty :)', 8); --1
-INSERT INTO reviews (review, rating) VALUES ('160 hours so far', 9.9); --2
+INSERT INTO reviews (review, rating) VALUES ('160 hours so far', 10); --2
 INSERT INTO reviews (review, rating) VALUES ('2B or not 2B', 10); --3
-INSERT INTO reviews (review, rating) VALUES ('dooming humanity is so fun', 8.9); --4
+INSERT INTO reviews (review, rating) VALUES ('dooming humanity is so fun', 9); --4
 INSERT INTO reviews (review, rating) VALUES ('CRAAAAAAZY TAXIIIIII', 10); --5
 INSERT INTO reviews (review, rating) VALUES ('SEGA DREAM CAST IS SUPERIOR', 8); --6
 
