@@ -228,7 +228,7 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields game, name, video_id; limit 5; where game != null;"
+    data: "fields game, name, video_id; where game != null & game.total_rating != 0; sort game.release_dates asc; limit 10;"
 
   });
 
@@ -240,21 +240,48 @@ app.get('/discover', (req, res) => {
         'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
         'Authorization': `Bearer ${process.env.API_KEY}`,
     },
-    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 25;"
+    data: "fields id,name, cover.*, release_dates.date, hypes; where release_dates.platform.platform_family = (1,2); sort first_release_date desc; limit 100;"
+
+  });
+
+  const top_console_games = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields id,name, cover.*, release_dates.date, hypes, platforms, total_rating; where platforms = (48,49,167,169) & rating != 0 & aggregated_rating != 0 & total_rating_count > 100; sort total_rating desc; limit 25;"
+
+  });
+
+  const top_pc_games = axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': '3wjgq5511om2hr753zb9vz2uvhxoae',
+        'Authorization': `Bearer ${process.env.API_KEY}`,
+    },
+    data: "fields id,name, cover.*, release_dates.date, hypes, platforms, total_rating; where platforms = 6 & rating != 0 & aggregated_rating != 0 & total_rating_count > 100; sort total_rating desc; limit 25;"
 
   });
 
 
-
-  Promise.all([highest_rated_games, popular_game_videos ,newest_games])
+  Promise.all([highest_rated_games, popular_game_videos ,newest_games, top_console_games, top_pc_games])
     .then(results => {
       const highest_rated_games = results[0].data;
       const popular_game_videos = results[1].data;
       const newest_games = results[2].data;
+      const top_console_games = results[3].data;
+      const top_pc_games = results[4].data;
       res.render('pages/discover', {
         highest_rated_games,
         popular_game_videos,
         newest_games,
+        top_console_games,
+        top_pc_games,
         isLoggedIn,
       });
     })
@@ -264,6 +291,8 @@ app.get('/discover', (req, res) => {
         highest_rated_games: [],
         popular_game_videos: [],
         newest_games: [],
+        top_console_games: [],
+        top_pc_games: [],
       });
     });
 });
@@ -548,6 +577,7 @@ app.get('/dashboard', async (req, res) => {
 
 
 app.post('/add_game', async (req,res) => {
+  const isLoggedIn = req.session.user !== undefined;
   if (req.session && req.session.user) {
   // db queries
   const insertGame = 'insert into games (game_id, name) values ($1, $2) returning * ;';

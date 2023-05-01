@@ -97,5 +97,54 @@
     <% } %> <% }) %>
   </div>
 </div>
+<br>
+<div class="container-fluid-6">
+  <h1 class="link2">Top Console Games</h1>
+  <div class="card-row">
+    <% top_console_games.forEach(event => { %> <% if (event.cover) { %>
+    <div class="card">
+      <a
+        href="/gamepage/<%= event.id %>"
+        class="link2"
+        aria-label="<%=event.name %>"
+        ><%=event.name %> <% let coverURL = event.cover.url; let coverURLBig =
+        coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+        <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
+      </a>
+      <i
+        class="fas fa-plus plus-icon"
+        onclick="openModal('<%= event.id %>', '<%= event.name %>')"
+        data-bs-toggle="modal"
+        data-bs-target="#AddGameModal"
+      ></i>
+    </div>
+    <% } %> <% }) %>
+  </div>
+</div>
+
+<br>
+<div class="container-fluid-5">
+  <h1 class="link2">Top PC Games</h1>
+  <div class="card-row">
+    <% top_pc_games.forEach(event => { %> <% if (event.cover) { %>
+    <div class="card">
+      <a
+        href="/gamepage/<%= event.id %>"
+        class="link2"
+        aria-label="<%=event.name %>"
+        ><%=event.name %> <% let coverURL = event.cover.url; let coverURLBig =
+        coverURL.replace('t_thumb', 't_cover_big_2x'); %>
+        <img src="<%=coverURLBig %>" alt="<%=event.name %>" />
+      </a>
+      <i
+        class="fas fa-plus plus-icon"
+        onclick="openModal('<%= event.id %>', '<%= event.name %>')"
+        data-bs-toggle="modal"
+        data-bs-target="#AddGameModal"
+      ></i>
+    </div>
+    <% } %> <% }) %>
+  </div>
+</div>
 
 <%- include ('../partials/footer') %>
