@@ -1,7 +1,7 @@
 -- The following inserts are for testing purposes
 
 INSERT INTO users (username, password) VALUES ('ash_k', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO'); 
-INSERT INTO users (username, password) VALUES ('jared', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO'); 
+INSERT INTO users (username, password) VALUES ('jared', '$2b$10$h3tTO6ZKyPf2.rOHlviIFOJjy9xb8aqrBD1TDdR7qn.HA4XWhDlSO');
 
 INSERT INTO games (game_id, name) VALUES (119277, 'Genshin Impact');
 INSERT INTO games (game_id, name) VALUES (138162, 'Umineko no Naku Koro ni Chiru: Shinjitsu to Gensou no Nocturne');
