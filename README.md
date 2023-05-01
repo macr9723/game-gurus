@@ -12,16 +12,16 @@ Game Gurus is a video game forum that keeps users in the loop on all things vide
 Not seeing what you’re looking for? Users are able to use the search bar to browse their favorite games and are also able to post their personal ratings and reviews to respective gamepages. By posting a review and rating, the user adds the game to their personal dashboard where they can access all the games they have previously interacted with. A separate page labeled ‘archive’ hosts a larger volume of video games organized by genre where the user can explore games they might be interested in. By selecting a different ‘genre’ and/or ‘theme’ buttons, different video games will be displayed to the user based on their selections.
 
 ## Tech Stack: 
-VCS - GitHub
-Project Tracking - GitHub Project Board
-Database - PostgreSQL
-IDE - VSCode
-UI Tool - EJS
-Application Server - NodeJS
-Deployment - Azure
-Methodology - Agile
-External API - IGDB
-Wireframing - LucidChart
+- VCS - GitHub
+- Project Tracking - GitHub Project Board
+- Database - PostgreSQL
+- IDE - VSCode
+- UI Tool - EJS
+- Application Server - NodeJS
+- Deployment - Azure
+- Methodology - Agile
+- External API - IGDB
+- Wireframing - LucidChart
 
 ## How to run the tests
 - Link to Test Branch
