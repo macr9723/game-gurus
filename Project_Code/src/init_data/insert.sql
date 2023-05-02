@@ -23,7 +23,7 @@ INSERT INTO reviews (review, rating) VALUES ('scrub', 1); --8
 INSERT INTO reviews (review, rating) VALUES ('miiid', 1); --9
 INSERT INTO reviews (review, rating) VALUES ('even more miiid', 1); --10
 INSERT INTO reviews (review, rating) VALUES ('CRAAAAAAZY TAXIIIIII', 1); --11
-INSERT INTO reviews (review, rating) VALUES ('best lego game', 20); --12
+INSERT INTO reviews (review, rating) VALUES ('best lego game', 10); --12
 
 INSERT INTO entries (game_id, review_id) VALUES (119277, 1); --1
 INSERT INTO entries (game_id, review_id) VALUES (138162, 2); --2
