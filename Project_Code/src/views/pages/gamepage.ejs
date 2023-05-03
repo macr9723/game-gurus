@@ -35,7 +35,7 @@
       <div class="d-flex flex-column mb-3">
         <div class="d-flex flex-row align-items-baseline justify-content-around mb-3">
           <div class="h1" style="font-family: HafferTrial-SemiBold; color: white;" ><%=data[0].name %></div>
-          <% if(data[0].release_dates[0].human) { %>
+          <% if(data[0].release_dates) { %>
           <div class="ms-auto h5" style="font-family: HafferTrial-Light; color: white;" > Release Date - <%=data[0].release_dates[0].human %></div>
           <% } %>
         </div>
@@ -52,8 +52,10 @@
         <div class="game-info-container">
         <div class="d-flex flex-wrap mb-3">
           <h5 style="font-family: Akkurat; color: #f94f39;">Platforms - </h5>
+          <% if(data[0].platforms) { %>
         <% for(let i = 0; i < data[0].platforms.length; i++) { %>
           <div class="h5  mx-2" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].platforms[i].name %></div>
+        <% } %>
         <% } %>
           <div class="p-1 flex-sm-fill" style="font-family: HafferTrial-Light; color: white;" ><%=data[0].summary %></div>
           <div class="score-container">
