@@ -23,11 +23,19 @@ Not seeing what you’re looking for? Users are able to use the search bar to br
 - External API - IGDB
 - Wireframing - LucidChart
 
+## Prerequsites to run application 
+- When deployed, the application only needs a browser to run
+
+## How to run application locally
+- Clone Git repository
+- Install and run Docker container
+- 'docker compose up' and run via localhost
+
 ## How to run the tests
 - Link to Test Branch
 https://github.com/macr9723/game-gurus/tree/Test
 
-### Link to Deliverable
+### Link to Project Proposal
 - [Here](https://docs.google.com/document/d/1yH0WpI1xJerLbbXM1trn9cCRhVGhJZvdjHoIMOE_Lx8/edit?usp=sharing)
 
 ## Deployment Link

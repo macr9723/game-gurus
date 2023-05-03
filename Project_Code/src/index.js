@@ -70,12 +70,10 @@ app.use(express.static(path.join(__dirname, 'resources')));
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
-
-
 //REGISTER API
 
 app.get('/', (req, res) => {
-  res.redirect('pages/discover');
+  res.redirect('/discover');
 });
 
 app.get('/register', (req, res) => {
@@ -105,28 +103,13 @@ app.post('/register', async (req, res) => {
     db.one(query,values)
     .then((data) => {
       console.log(data);
-      //Successfull registration test case
-      //res.status(200).json({
-        //status: 'Success',
-        //message: 'Registration Successful'
-      //});
       res.redirect("/login");
     })
     .catch((err) => {
       console.log(err);
-      //Unsuccessful registration test case default
-      //res.status(500).json({
-        //status: 'Error',
-        //message: 'Registration Failed'
-      //});
       res.redirect("/register");
     });
   } else {
-    //Unsuccessful registration test case
-    //res.status(409).json({
-      //status: 'Error',
-      //message: 'Username already exists'
-    //});
     res.render('pages/register', {
       error: true,
       message: 'Username already exists',
@@ -134,7 +117,6 @@ app.post('/register', async (req, res) => {
     });
     return;
   }
-
 });
 
 // LOGIN API
@@ -145,9 +127,7 @@ app.get('/login', (req, res) => {
 	res.render("pages/login", {isLoggedIn});
 });
 
-// Try/catch *** do we want to keep db of usernames?? ***
-
-
+// Try/catch
 app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
   const isLoggedIn = req.session.user !== undefined;
@@ -172,10 +152,6 @@ app.post('/login', async (req, res) => {
 
 		if (!match) {
 			// Passwords don't match, throw error
-
-      // negative test case
-      // Send JSON error response with 200 status code
-      //res.status(200).json({ status: 'error', message: 'Incorrect Username or Password' });
 			res.render('pages/login', {
         error: true,
         message: 'Incorrect Username or Password',
@@ -187,19 +163,7 @@ app.post('/login', async (req, res) => {
 		// Passwords match, save user in session
 		req.session.user = user;
 		req.session.save();
-
-    //testcase message
-    //res.status(200).json({ status: 'Success', message: 'Login Successful', user });
-    // Redirect to /discover
     res.redirect('/discover');
-    
-    //The reason we can't use the code below is that we are using a redirect to discover instead.
-    //res.render('pages/discover', {
-      //status: 'success',
-      //message: 'Login Successful'
-    //})
-
-
 	} catch (error) {
 		// Handle error and render login page with error message
 		res.render('pages/login', { message: error.message, isLoggedIn });
@@ -571,6 +535,7 @@ app.get('/dashboard', async (req, res) => {
         games: [],
         error: true,
         message: err.message,
+        isLoggedIn
       });
     });
 });
@@ -585,16 +550,11 @@ app.post('/add_game', async (req,res) => {
   const insertEntry = 'insert into entries (game_id, review_id) values ($1, $2) returning * ;';
   const insertUsers_to_Entries = 'insert into users_to_entries (username, entry_id) values ($1, $2) returning * ;';
 
-  // trying to get review count -- TONY
-  const insertReviewCount = 'insert into entries (game_id) values ($1) returning COUNT(review_id);';
-
   // getting params
   const game_id = req.body.gameId;
   const name = req.body.gameName;
   const rating = req.body.rating;
   const review = req.body.review;
-  const reviewCount = req.body.insertReviewCount; // TONY
-  const ratingCount = req.body.ratingCount;
   
   // Before updating games table check if a game already exists in the database
   try {
@@ -602,11 +562,13 @@ app.post('/add_game', async (req,res) => {
     const [gameFound] = await db.any(`select game_id from games where game_id = $1;`, [game_id]);
     if (!gameFound) {
       db.any(insertGame, [game_id, name])
-        .then(function (data){
-          res.redirect('/discover');
-        })
         .catch(function (err) {
-          return console.log(err);
+          res.render("pages/dashboard", {
+            games: [],
+            error: true,
+            message: err.message,
+            isLoggedIn
+          });
         });
     }
   
@@ -615,28 +577,25 @@ app.post('/add_game', async (req,res) => {
     const [newEntry] = await db.any(insertEntry, [game_id, newReview.review_id])
     db.any(insertUsers_to_Entries, [req.session.user.username, newEntry.entry_id])
       .then(function (data){
-        res.redirect('discover');
+        console.log(data);
+        res.redirect('/discover');
       })
       .catch(function (err) {
         return console.log(err);
       })
   } catch (error) {
-    // res.render('/discover', { message: error.message });
     res.redirect('/discover');
   }
   } else {
-    res.render('pages/login', { message: 'Please login to add a game' });
+    res.render('pages/login', { message: 'Please login to add a game', isLoggedIn});
   }
 });
 
 //Logout
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.redirect("/discover");
+  res.redirect('/discover');
 });
-
-
-
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
